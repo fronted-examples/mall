@@ -29,8 +29,8 @@ const render = async (req, res) => {
     // renderToString支持promise
     const html = await renderer.renderToString({
       // 在模板中使用外部数据(可选第二个参数)
-      title: 'vue ssr',
-      meta: `<meta name="description" content="vue-SSR">`,
+      title: '购物天堂',
+      meta: `<meta name="description" content="购物天堂">`,
       // entry-server.js用于设置服务器端router的位置
       url: req.url,
     })
@@ -46,7 +46,7 @@ const render = async (req, res) => {
 // 服务端路由设置为 *，意味着所有的路由都会进入这里,不然会导致刷新页面，获取不到页面的bug
 // 并且vue-router设置的404页面无法进入
 server.get(
-  '/vue-ssr/*',
+  '/mall/*',
   render // 生产模式：使用构建好的包直接渲染
 )
 

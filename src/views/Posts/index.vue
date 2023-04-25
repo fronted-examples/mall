@@ -1,9 +1,11 @@
 <template>
   <div>
     <h1>Post List</h1>
-    <el-button @click="handleClick">测试接入element-ui</el-button>
+    <el-button
+               @click="handleClick">测试接入element-ui</el-button>
     <ul class="ul">
-      <li class="li" v-for="post in posts" :key="post.id">{{ post.title }}</li>
+      <li class="li" v-for="post in posts"
+          :key="post.id">{{ post.title }}</li>
     </ul>
   </div>
 </template>
@@ -13,10 +15,11 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   computed: {
-    ...mapState(['posts'])
+    ...mapState('app', ['posts'])
   },
   asyncData ({ store, route }) {
-    return store.dispatch('getPosts')
+    console.log('this: ', this)
+    return store.dispatch('app/setPosts')
   },
   // Vue SSR 特殊为服务端渲染提供的一个生命周期钩子函数(渲染之前调用)
   // serverPrefetch () {
@@ -26,8 +29,11 @@ export default {
   //   return this.getPosts()
   // },
   methods: {
-    ...mapActions(['getPosts']),
-    handleClick  (e) {
+    ...mapActions({
+      getPosts: 'app/getPosts',
+      setPosts: 'app/setPosts'
+    }),
+    handleClick (e) {
       console.log('打野')
     }
   }
@@ -37,7 +43,7 @@ export default {
 <style lang="scss" scoped>
 .ul {
   .li {
-  font-size: 50px;
-}
+    font-size: 25px;
+  }
 }
 </style>

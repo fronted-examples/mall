@@ -6,10 +6,13 @@ const WebpackBar = require('webpackbar')
 
 const { merge } = require('webpack-merge')
 
+const isProd = process.env.NODE_ENV === 'production'
+
 const plugins = [
     new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.VUE_ENV': '"server"'
+        'process.env.VUE_ENV': '"server"',
+        'process.env.BASE_URL': isProd ? '"https://cnodejs.org"' : '"https://cnodejs.org"'
     }),
     new VueSSRServerPlugin()
 ]

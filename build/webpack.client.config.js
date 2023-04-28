@@ -15,7 +15,8 @@ const plugins = [
         'process.env.NODE_ENV': JSON.stringify(
             process.env.NODE_ENV || 'development'
         ),
-        'process.env.VUE_ENV': '"client"'
+        'process.env.VUE_ENV': '"client"',
+        'process.env.BASE_URL': isProd ? '"https://cnodejs.org"' : '"https://cnodejs.org"'
     }),
     new VueSSRClientPlugin(),
     new MiniCssExtractPlugin({

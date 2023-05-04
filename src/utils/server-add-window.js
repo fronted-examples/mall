@@ -5,8 +5,8 @@ const isProd = process.env.NODE_ENV === 'production'
 /**
  * 使用jsdom虚拟化window对象，以免使用SSR的时候报错
  */
-const DOM = new JSDOM('', {
-  url: isProd ? 'http://101.35.44.70:80/mall' : 'http://localhost:3000/mall/',
+const DOM = new JSDOM(``, {
+  url: isProd ? 'http://101.35.44.70:80/mall' : 'http://localhost:3000/',
   resources: 'usable',
   runScripts: global.UNSAFE_MODE ? 'dangerously' : 'outside-only',
 })
@@ -20,7 +20,3 @@ global.cancelAnimationFrame = global.window.cancelAnimationFrame
 global.Node = global.window.Node
 global.NodeList = global.window.NodeList
 global.DOMParser = global.window.DOMParser
-
-console.log('global: ', global.window.sessionStorage)
-console.log('window: ', window.location.origin)
-console.log('isProd: ', isProd)

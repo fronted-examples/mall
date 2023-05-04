@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <section class="home">
     主页
-  </div>
+  </section>
 </template>
 
 <script>
@@ -10,13 +10,13 @@ export default {
   metaInfo: {
     title: '首页'
   },
-  data() {
+  data () {
     return {
-      
+
     }
   },
   beforeCreate () {
-    console.log('gbl: ', global.window.location.origin)
+    // console.log('gbl: ', global.window)
   }
 }
 </script>

@@ -12,7 +12,7 @@ const plugins = [
     new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
         'process.env.VUE_ENV': '"server"',
-        'process.env.BASE_URL': isProd ? '"https://cnodejs.org"' : '"https://cnodejs.org"'
+        // 'process.env.BASE_URL': isProd ? '"https://cnodejs.org"' : '"https://cnodejs.org"'
     }),
     new VueSSRServerPlugin()
 ]

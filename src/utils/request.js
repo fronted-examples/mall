@@ -44,7 +44,7 @@ function retryAdapterEnhancer (adapter, options) {
     return request()
   }
 }
-console.log('process.env.BASE_URL: ', process.env.BASE_URL)
+// console.log('process.env.BASE_URL: ', process.env.BASE_URL)
 // create an axios instance
 const service = axios.create({
   // 如果不存在跨域问题并且在dev.env.xxx文件中有配置的话baseURL的值可以直接使用：process.env.BASE_URL；
@@ -121,7 +121,9 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      return Promise.reject(new Error(res.message || 'Error'))
+      console.log('res: ', res)
+
+      // return Promise.reject(new Error(res.message || 'Error'))
     }
 
     return res

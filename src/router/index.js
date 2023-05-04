@@ -1,8 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 // webpack中配置@指向src
-import Home from '@/views/Home/index'
 import Layout from '@/layout/index'
+
+const Home = resolve => require(['@/views/home/index'], resolve)
+const Activity = resolve => require(['@/views/activity/index'], resolve)
+const Subjects = resolve => require(['@/views/subjects/index'], resolve)
+const Boiling = resolve => require(['@/views/boiling/index'], resolve)
+const NotFound = resolve => require(['@/views/404/index'], resolve)
 
 Vue.use(Router)
 
@@ -18,35 +24,51 @@ export function createRouter () {
     // 同构应用不能使用 hash 路由，应该使用 history 模式，兼容前后端
     mode: 'history',
     routes: [
-        {
-            path: '/',
-            component: Layout,
-            redirect: '/home',
-            children: [{
-                path: '/home',
-                name: 'Home',
-                component: Home
-            }],
-        }, {
-            path: '/about',
-            component: Layout,
-            redirect: '/about',
-            children: [{
-                path: '/about',
-                name: 'About',
-                // 懒加载路由 按需加载，异步的
-                component: ()=> import('@/views/About/index')
-            }],
-        }, {
-            path: '/posts',
-            component: Layout,
-            redirect: '/posts',
-            children: [{
-                path: '/posts',
-                name: 'Posts',
-                component: ()=> import('@/views/Posts/index')
-            }]
-        }
+      {
+        path: '/',
+        component: Layout,
+        redirect: '/home',
+        children: [{
+          path: '/home',
+          name: 'home',
+          component: Home
+        }]
+      },
+      {
+        path: '/boiling',
+        component: Layout,
+        redirect: '/boiling',
+        children: [{
+          path: '/boiling',
+          name: 'boiling',
+          component: Boiling
+        }]
+      },
+      {
+        path: '/subjects',
+        component: Layout,
+        redirect: '/subjects',
+        children: [{
+          path: '/subjects',
+          name: 'subjects',
+          component: Subjects
+        }]
+      },
+      {
+        path: '/activity',
+        component: Layout,
+        redirect: '/activity',
+        children: [{
+          path: '/activity',
+          name: 'activity',
+          component: Activity
+        }]
+      },
+      {
+        path: '*',
+        hidden: true,
+        component: NotFound
+      }
     ]
   })
 }

@@ -3,7 +3,7 @@ const { VueLoaderPlugin } = require('vue-loader')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const isProd = process.env.NODE_ENV === 'production'
 
-function resolve(dir) {
+function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -47,18 +47,18 @@ module.exports = {
       {
         test: /\.(sc|c)ss$/,
         use: [
-            // fallback to style-loader in development
-            isProd !== 'production' ? 'vue-style-loader' : {
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                // 解决 export 'default' (imported as 'mod') was not found
-                // 启用 CommonJS 语法
-                esModule: false,
-              },
+          // fallback to style-loader in development
+          isProd !== 'production' ? 'vue-style-loader' : {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // 解决 export 'default' (imported as 'mod') was not found
+              // 启用 CommonJS 语法
+              esModule: false,
             },
-            "css-loader",
-            "postcss-loader",
-            "sass-loader"
+          },
+          "css-loader",
+          "postcss-loader",
+          "sass-loader"
         ]
       },
       {

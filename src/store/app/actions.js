@@ -8,7 +8,9 @@ import { getPosts } from '@/apis'
 
 const actions = {
   [SET_POSTS]: async (context) => {
-    getPosts()
+    getPosts().then((res) => {
+      console.log('res: ', res)
+    })
     // const { data } = await axios.get('https://cnodejs.org/api/v1/topics')
     // context.commit(SET_POSTS, data.data)
   },

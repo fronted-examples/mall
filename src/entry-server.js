@@ -31,6 +31,7 @@ export default async (context) => {
     // 客户端就要把页面中的 window.__INITIAL_STATE__ 拿出来填充到客户端 store 容器中
     context.state = store.state
   }
+
   // async对于非Promise的数据，会将他把装在Promise中，成功后返回对应的数据
   return app
 }

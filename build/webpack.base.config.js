@@ -25,6 +25,7 @@ module.exports = {
     alias: {
       public: resolve('public'),
       '@': resolve('src'),
+      '~/static': path.resolve(__dirname, '../static'),
     },
   },
   module: {
@@ -67,8 +68,32 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|svg|jpg|gif|ico)$/,
-        use: ['file-loader'],
+        test: /\.(png|jpe?g|gif|ico|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        //这个不处理svg图片，因为我们独立拆开让svg-sprite-loader来处理了
+        exclude: [resolve('src/icons')],
+        options: {
+          limit: 10000,
+          // 解决图片地址变为[object Module]
+          esModule: false,
+          name: '[name].[hash:7].[ext]'
+        }
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-sprite-loader',
+        include: [resolve('src/icons')],
+        options: {
+          symbolId: 'icon-[name]'//去掉svg这个图片加载不出来
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: '[name].[hash:7].[ext]'
+        }
       },
       {
         test: /\.(woff|eot|ttf)\??.*$/,

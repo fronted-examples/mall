@@ -1,0 +1,15 @@
+.rotate-3D {
+  transition:all .5s ease-in-out;
+	transform-style:preserve-3d;
+	backface-visibility:hidden;
+}
+
+.rotate-3D-front {
+	transform:rotateY(0deg);
+	z-index:2;
+}
+
+.rotate-3D-back {
+	transform:rotateY(180deg);
+	z-index:1;
+}

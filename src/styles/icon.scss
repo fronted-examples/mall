@@ -1,0 +1,298 @@
+@font-face {
+  font-family: "font"; /* Project id 3198415 */
+  src: url("../assets/fonts/font.woff") format("woff"),
+    url("../assets/fonts/font.ttf") format("truetype");
+  font-weight: normal;
+  font-display: auto;
+  font-style: normal;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "font" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: baseline;
+  display: inline-block;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-image:before {
+  content: "\e92e";
+}
+
+.icon-checked:before {
+  content: "\e61b";
+}
+
+.icon-change:before {
+  content: "\e64f";
+}
+
+.icon-smallscreen:before {
+  content: "\e72b";
+}
+
+.icon-widescreen:before {
+  content: "\e76c";
+}
+
+.icon-fullscreen:before {
+  content: "\e602";
+}
+
+.icon-play:before {
+  content: "\e74f";
+}
+
+.icon-pause:before {
+  content: "\e741";
+}
+
+.icon-resume:before {
+  content: "\e616";
+}
+
+.icon-system-manage:before {
+  content: "\e61f";
+}
+
+.icon-menus:before {
+  content: "\e61c";
+}
+
+.icon-data:before {
+  content: "\e638";
+}
+
+.icon-success-top-right:before {
+  content: "\e8ec";
+}
+
+.icon-success-top-left:before {
+  content: "\e601";
+}
+
+.icon-success-right-bottom:before {
+  content: "\e688";
+}
+
+.icon-recommend-checked:before {
+  content: "\e60b";
+}
+
+.icon-compass:before {
+  content: "\e617";
+}
+
+.icon-star:before {
+  content: "\e64e";
+}
+
+.icon-notice-fill:before {
+  content: "\e709";
+}
+
+.icon-notice:before {
+  content: "\e70a";
+}
+
+.icon-left:before {
+  content: "\e628";
+}
+
+.icon-loading:before {
+  content: "\e668";
+}
+
+.icon-lock:before {
+  content: "\e62d";
+}
+
+.icon-message:before {
+  content: "\e631";
+}
+
+.icon-right:before {
+  content: "\e642";
+}
+
+.icon-unlock:before {
+  content: "\e655";
+}
+
+.icon-upload:before {
+  content: "\e656";
+}
+
+.icon-close-border:before {
+  content: "\e6ca";
+}
+
+.icon-info:before {
+  content: "\e67d";
+}
+
+.icon-speaker:before {
+  content: "\e61e";
+}
+
+.icon-userbook:before {
+  content: "\e633";
+}
+
+.icon-users:before {
+  content: "\e685";
+}
+
+.icon-lockuser:before {
+  content: "\e621";
+}
+
+.icon-user:before {
+  content: "\e623";
+}
+
+.icon-notice-forbid-fill:before {
+  content: "\e7f7";
+}
+
+.icon-setting:before {
+  content: "\e78e";
+}
+
+.icon-zoomout:before {
+  content: "\ec13";
+}
+
+.icon-enlarge:before {
+  content: "\ec14";
+}
+
+.icon-error-fill:before {
+  content: "\e86f";
+}
+
+.icon-setting-fill:before {
+  content: "\e871";
+}
+
+.icon-edit:before {
+  content: "\e652";
+}
+
+.icon-information-fill:before {
+  content: "\e61d";
+}
+
+.icon-clock:before {
+  content: "\e6e8";
+}
+
+.icon-information:before {
+  content: "\e624";
+}
+
+.icon-share-fill:before {
+  content: "\e729";
+}
+
+.icon-delete:before {
+  content: "\e699";
+}
+
+.icon-close:before {
+  content: "\e69e";
+}
+
+.icon-volume:before {
+  content: "\e619";
+}
+
+.icon-unvolume:before {
+  content: "\e681";
+}
+
+.icon-view:before {
+  content: "\e6ad";
+}
+
+.icon-search:before {
+  content: "\e600";
+}
+
+.icon-print:before {
+  content: "\e75d";
+}
+
+.icon-cart:before {
+  content: "\e763";
+}
+
+.icon-cart-fill:before {
+  content: "\e77a";
+}
+
+.icon-success-circle:before {
+  content: "\e6c9";
+}
+
+.icon-success-verify:before {
+  content: "\e6de";
+}
+
+.icon-hook:before {
+  content: "\e60d";
+}
+
+.icon-tag:before {
+  content: "\e911";
+}
+
+.icon-favour:before {
+  content: "\e69f";
+}
+
+.icon-label::before {
+  content: "\e637";
+}
+
+.icon-success-round:before {
+  content: "\e68b";
+}
+
+.icon-address:before {
+  content: "\e814";
+}
+
+.icon-unview:before {
+  content: "\e61a";
+}
+
+.icon-loading {
+  animation: rotating 2s linear infinite;
+}
+
+.icon--right {
+  margin-left: 5px;
+}
+.icon--left {
+  margin-right: 5px;
+}
+
+@keyframes rotating {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}

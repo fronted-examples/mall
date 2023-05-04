@@ -8,7 +8,9 @@ const Home = resolve => require(['@/views/home/index'], resolve)
 const Activity = resolve => require(['@/views/activity/index'], resolve)
 const Subjects = resolve => require(['@/views/subjects/index'], resolve)
 const Boiling = resolve => require(['@/views/boiling/index'], resolve)
-const NotFound = resolve => require(['@/views/404/index'], resolve)
+
+const NotFound = resolve => require(['@/views/not-found/index'], resolve)
+const Forbidden = resolve => require(['@/views/forbidden/index'], resolve)
 
 Vue.use(Router)
 
@@ -63,6 +65,11 @@ export function createRouter () {
           name: 'activity',
           component: Activity
         }]
+      },
+      {
+        path: '/forbidden',
+        hidden: true,
+        component: Forbidden
       },
       {
         path: '*',

@@ -1,6 +1,7 @@
 <template>
   <section class="home">
     主页
+    <svg-icon icon-class="html" />
   </section>
 </template>
 

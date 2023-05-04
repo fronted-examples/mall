@@ -6,23 +6,15 @@ import { createStore } from './store/index'
 // 服务端渲染不做客户端全局导航守卫，否则会导致只有首页服务端渲染
 // import { routerGuard } from './router-guard'
 
-import {
-  Button,
-  Select,
-  Container,
-  Header,
-  Main,
-  Footer
-} from 'element-ui'
+import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+
+import '@/icons'
+import '@/styles/index.scss' // 全局scss样式
 
 
 Vue.use(VueMeta)
-Vue.use(Button)
-Vue.use(Container)
-Vue.use(Header)
-Vue.use(Main)
-Vue.use(Footer)
+Vue.use(ElementUI)
 
 Vue.mixin({
   metaInfo: {

@@ -1,14 +1,18 @@
 <template>
   <el-header class="nav-header">
-    <span class="nav-item"
-          :class="[currentIndex === index ? 'is-active' : '']"
-          v-for="(item, index) of navs"
-          :key="index"
-          @click="toTarget(item, index)">
-      {{ item.label }}
-      <span class="border-line"
-            :class="[currentIndex === index ? 'is-active' : '']"></span>
-    </span>
+    <section class="left-box">
+      <span class="nav-item"
+            :class="[currentIndex === index ? 'is-active' : '']"
+            v-for="(item, index) of navs"
+            :key="index"
+            @click="toTarget(item, index)">
+        {{ item.label }}
+        <span class="border-line"
+              :class="[currentIndex === index ? 'is-active' : '']"></span>
+      </span>
+    </section>
+
+    <section class="right-box"></section>
   </el-header>
 </template>
 

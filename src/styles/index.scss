@@ -1,0 +1,142 @@
+@import "./variables.scss";
+@import "./transition.scss";
+@import "./sidebar.scss";
+@import "./icon.scss";
+
+.flex-row {
+  display: flex !important;
+}
+
+.flex-inline {
+  display: inline-flex !important;
+}
+
+.flex-inline-column {
+  display: inline-flex !important;
+  flex-direction: column !important;
+}
+
+.flex-column {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.main-start {
+  justify-content: flex-start !important;
+}
+
+.main-center {
+  justify-content: center !important;
+}
+
+.main-end {
+  justify-content: flex-end !important;
+}
+
+.main-between {
+  justify-content: space-between !important;
+}
+
+.secondary-start {
+  align-items: flex-start !important;
+}
+
+.secondary-center {
+  align-items: center !important;
+}
+
+.secondary-end {
+  align-items: flex-end !important;
+}
+
+.ellipsis-1 {
+  overflow: hidden; //超出的文本隐藏
+  text-overflow: ellipsis; //溢出用省略号显示
+  white-space: nowrap; //溢出不换行
+}
+
+.ellipsis-2 {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+.ellipsis-3 {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.router-link-active {
+  text-decoration: none !important;
+}
+
+img[src=""],
+img:not([src]) {
+  width: 0;
+  height: 0;
+  padding: 82px 130px;
+  background: url("../assets/images/break.png") no-repeat center;
+  background-size: 100% 100%;
+}
+
+/* 在全局CSS里引用: */
+/* 滚动条宽度 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 10px;
+}
+
+/* 滚动条的滑块 */
+::-webkit-scrollbar-thumb {
+  background-color: #a1a3a9;
+  border-radius: 3px;
+}
+
+//全屏按钮
+video::-webkit-media-controls-fullscreen-button {
+  display: none;
+}
+//播放按钮
+video::-webkit-media-controls-play-button {
+  display: none;
+}
+//进度条
+video::-webkit-media-controls-timeline {
+  display: none;
+}
+//观看的当前时间
+video::-webkit-media-controls-current-time-display {
+  display: none;
+}
+//剩余时间
+video::-webkit-media-controls-time-remaining-display {
+  display: none;
+}
+//音量按钮
+video::-webkit-media-controls-mute-button {
+  display: none;
+}
+video::-webkit-media-controls-toggle-closed-captions-button {
+  display: none;
+}
+//音量的控制条
+video::-webkit-media-controls-volume-slider {
+  display: none;
+}
+//所有控件
+video::-webkit-media-controls-enclosure {
+  display: none;
+}

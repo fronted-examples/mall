@@ -10,10 +10,10 @@ import user from './user/index'
 Vue.use(Vuex)
 
 // 存储服务端vuex前，将window对象绑定到global上
-if (process.env.VUE_ENV === "server") {
-    require('@/utils/server-add-window.js')
-    require('@/utils/flexible')
-}
+// if (process.env.VUE_ENV === "server") {
+//     require('@/utils/server-add-window.js')
+//     require('@/utils/flexible')
+// }
 
 /**
  * 因为服务端渲染会每次都创建一个新的store

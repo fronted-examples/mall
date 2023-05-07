@@ -1,6 +1,7 @@
 const states = {
-  user: null,
-  token: ''
+  validateCodeImg: '',
+  accessToken: '',
+  userInfo: null
 }
 
 export default states

@@ -19,30 +19,89 @@
       <section
                class="right-box flex-row secondary-center">
         <svg-icon icon-class="notice" />
-        <el-button class="login-btn"
+        <el-button v-if="!accessToken"
+                   class="login-btn"
                    type="primary" plain
-                   size="medium" @click="login">登录
-          |
+                   size="medium"
+                   @click="toLogin">登录 |
           注册</el-button>
+
+        <el-popover :appendToBody="false"
+                    placement="bottom" width="242"
+                    trigger="click"
+                    v-if="accessToken">
+          <section class="user-info">
+            <div
+                 class="header flex-row secondary-center">
+              <img class="avatar" slot="reference"
+                   :src="avatarUrl" />
+              <span class="nickname">昵称</span>
+            </div>
+
+            <ul
+                class="content list flex-row main-between">
+              <li>
+                <svg-icon
+                          icon-class="main-page" />
+                <span class="item">我的主页</span>
+              </li>
+              <li>
+                <svg-icon
+                          icon-class="bookshelf" />
+                <span class="item">我的书架</span>
+              </li>
+            </ul>
+
+            <ul
+                class="footer list flex-row main-between">
+              <li>
+                <span class="item">我的设置</span>
+              </li>
+              <li @click="logout">
+                <span class="item">退出登录</span>
+              </li>
+            </ul>
+          </section>
+          <img class="avatar" slot="reference"
+               :src="avatarUrl" />
+        </el-popover>
       </section>
     </section>
 
     <el-dialog :visible.sync="loginVisible"
-               title="登录享受更多权益" append-to-body
-               :close-on-click-modal="false">
-      <span>这是一段信息</span>
+               title="登录享受更多权益"
+               :modal-append-to-body="false"
+               :close-on-click-modal="false"
+               width="20%">
+      <el-form class="login-form">
+        <el-form-item>
+          <el-input v-model="username"
+                    placeholder="请输入邮箱/用户名" />
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="password"
+                    placeholder="请输入密码" />
+        </el-form-item>
+        <el-form class="flex-row main-between">
+          <el-input class="validate-input"
+                    v-model="validateCode"
+                    placeholder="验证码" />
+          <img class="validate-img"
+               :src="validateCodeImg"
+               @click="getValidateCode" />
+        </el-form>
+      </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="loginVisible = false">取
-          消</el-button>
-        <el-button type="primary"
-                   @click="loginVisible = false">确
-          定</el-button>
+        <el-button type="primary" @click="login"
+                   :loading="loading">登录</el-button>
       </span>
     </el-dialog>
   </el-header>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'NavHeader',
   data () {
@@ -61,7 +120,24 @@ export default {
         name: 'activity'
       }],
       currentIndex: -1,
-      loginVisible: false
+      loginVisible: false,
+      username: '',
+      password: '',
+      validateCode: '',
+      loading: false,
+    }
+  },
+  computed: {
+    ...mapGetters('user', ['accessToken', 'userInfo']),
+    avatarUrl () {
+      if (this.userInfo && this.userInfo.avatarUrl) {
+        return this.userInfo.avatarUrl
+      }
+
+      return `${process.env.IMAGE_PREFIX}/file/images/default_avatar.svg`
+    },
+    validateCodeImg () {
+      return this.$store.state.user.validateCodeImg
     }
   },
   methods: {
@@ -71,8 +147,26 @@ export default {
         name: item.name
       })
     },
-    login () {
+    toLogin () {
       this.loginVisible = true
+      this.getValidateCode()
+    },
+    login () {
+      this.loading = true
+      this.$store.dispatch('user/login', {
+        username: this.username,
+        password: this.password,
+        validateCode: this.validateCode
+      }).then(() => {
+        this.loading = false
+        this.loginVisible = false
+      })
+    },
+    logout () {
+      this.$store.dispatch('user/logout')
+    },
+    getValidateCode () {
+      this.$store.dispatch('user/getRandomCode')
     }
   }
 }
@@ -140,6 +234,80 @@ export default {
     }
     .login-btn {
       margin-left: 10px;
+    }
+
+    .avatar {
+      margin-left: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .user-info {
+      .header {
+        .nickname {
+          margin-left: 10px;
+          font-size: 16px;
+        }
+      }
+      .content {
+        margin-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(228, 230, 235, 0.5);
+        li {
+          width: 104px;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+
+          cursor: pointer;
+          &:hover {
+            background: #f7f8fa;
+            border-radius: 4px;
+          }
+          .svg-icon {
+            font-size: 20px;
+          }
+          .item {
+            margin-left: 10px;
+          }
+        }
+      }
+
+      .footer {
+        font-size: 12px;
+        color: #8a919f;
+        margin-top: 5px;
+        li {
+          cursor: pointer;
+          &:hover {
+            color: #1e80ff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.el-dialog__wrapper {
+  ::v-deep .el-dialog__body {
+    padding-bottom: 20px;
+  }
+  .el-dialog {
+    .el-button {
+      width: 100%;
+    }
+
+    .validate-input {
+      width: 120px;
+    }
+
+    .validate-img {
+      width: 200px;
+      height: 40px;
+      object-fit: cover;
     }
   }
 }

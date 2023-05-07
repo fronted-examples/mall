@@ -9,7 +9,10 @@ export default {
   name: 'Boiling',
   data () {
     return {}
-  }
+  },
+  // asyncData ({ route, store }) {
+  //   return store.dispatch('user/getRandomCode')
+  // },
 }
 </script>
 

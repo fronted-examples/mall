@@ -1,14 +1,37 @@
 import {
-  SET_USER,
-  GET_USER
+  LOGIN,
+  LOGOUT,
+  GET_RANDOMCODE,
+  GET_USER_INFO
 } from './constants'
 
+import { sessionMemory } from '@/utils/storage'
+
 const mutations = {
-  [GET_USER]: (state, data) => {
-    return state.posts
+  [LOGIN]: (state, data) => {
+    state.accessToken = data.accessToken
+
+    sessionMemory.setItem({
+      name: 'accessToken',
+      value: data.accessToken
+    })
   },
-  [SET_USER]: (state, data) => {
-    state.posts = data
+  [LOGOUT]: (state) => {
+    state.accessToken = ''
+    state.userInfo = null
+    sessionMemory.removeItem('accessToken')
+    sessionMemory.removeItem('userInfo')
+  },
+  [GET_RANDOMCODE]: (state, data) => {
+    state.validateCodeImg = data
+  },
+  [GET_USER_INFO]: (state, data) => {
+    state.userInfo = data
+
+    sessionMemory.setItem({
+      name: 'userInfo',
+      value: data
+    })
   }
 }
 

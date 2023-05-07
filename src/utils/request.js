@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
-import { createApp } from '@/app.js'
+import { sessionMemory } from '@/utils/storage'
+
+import { createStore } from '@/store'
 
 /**
  * 控制请求重试
@@ -49,7 +51,7 @@ function retryAdapterEnhancer (adapter, options) {
 const service = axios.create({
   // 如果不存在跨域问题并且在dev.env.xxx文件中有配置的话baseURL的值可以直接使用：process.env.BASE_URL；
   // 如果使用proxy做了代理配置，那么baseURL的值直接填写'/'就可以了。
-  baseURL: process.env.BASE_URL, // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 60000, // request timeout
   adapter: retryAdapterEnhancer(axios.defaults.adapter, {
@@ -63,13 +65,12 @@ service.defaults.withCredentials = true
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    const { app, router, store } = createApp()
 
-    if (store.getters['user/token'] && config.url.indexOf(process.env.IMAGE_PREFIX) === -1) {
+    if (sessionMemory.getItem('accessToken') && config.url.indexOf(process.env.IMAGE_PREFIX) === -1) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['Authorization'] = 'Bearer ' + store.getters['user/token']
+      config.headers['Authorization'] = 'Bearer ' + sessionMemory.getItem('accessToken')
     }
 
     return config
@@ -97,6 +98,8 @@ service.interceptors.response.use(
     const res = response.data
     const config = response.config
 
+    console.log('config: ', config)
+
     // if the custom code is not 20000, it is judged as an error.
     if (config.responseType === 'blob') {
       // 下载请求，不抛错误
@@ -123,13 +126,15 @@ service.interceptors.response.use(
 
       console.log('res: ', res)
 
-      // return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.message || 'Error'))
     }
 
     return res
   },
   error => {
     console.log('err: ', error) // for debug
+
+    const store = createStore()
 
     if (error.response) {
       if (error.response.status === 401) {

@@ -29,9 +29,9 @@ export function createRouter () {
       {
         path: '/',
         component: Layout,
-        redirect: '/home',
+        redirect: '/',
         children: [{
-          path: '/home',
+          path: '/',
           name: 'home',
           component: Home
         }]

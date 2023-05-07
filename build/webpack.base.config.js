@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const isProd = process.env.NODE_ENV === 'production'
@@ -102,6 +103,9 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env': isProd ? require('../config/prod.env') : require('../config/dev.env')
+    }),
     new CopyWebpackPlugin([{
       from: path.resolve(__dirname, '../static'),
       to: 'static',

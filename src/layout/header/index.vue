@@ -1,59 +1,51 @@
 <template>
-  <el-header
-             class="nav-header flex-row main-between">
-    <section
-             class="container flex-row main-between">
-      <section
-               class="left-box flex-row secondary-center">
-        <span class="nav-item flex-inline main-center secondary-center"
-              :class="[currentIndex === index ? 'is-active' : '']"
-              v-for="(item, index) of navs"
+  <el-header class="nav-header flex-row main-between">
+    <section class="container flex-row main-between">
+      <section class="left-box flex-row secondary-center">
+        <span v-for="(item, index) of navs"
               :key="index"
+              class="nav-item flex-inline main-center secondary-center"
+              :class="[href === item.path ? 'is-active' : '']"
               @click="toTarget(item, index)">
-          {{ item.label }}
-          <span class="border-line"
-                :class="[currentIndex === index ? 'is-active' : '']"></span>
+          {{ item.meta.title }}
         </span>
       </section>
 
-      <section
-               class="right-box flex-row secondary-center">
+      <section class="right-box flex-row secondary-center">
         <svg-icon icon-class="notice" />
         <el-button v-if="!accessToken"
                    class="login-btn"
-                   type="primary" plain
+                   type="primary"
+                   plain
                    size="medium"
                    @click="toLogin">登录 |
           注册</el-button>
 
         <el-popover :appendToBody="false"
-                    placement="bottom" width="242"
+                    placement="bottom"
+                    width="242"
                     trigger="click"
                     v-if="accessToken">
           <section class="user-info">
-            <div
-                 class="header flex-row secondary-center">
-              <img class="avatar" slot="reference"
+            <div class="header flex-row secondary-center">
+              <img class="avatar"
+                   slot="reference"
                    :src="avatarUrl" />
               <span class="nickname">昵称</span>
             </div>
 
-            <ul
-                class="content list flex-row main-between">
+            <ul class="content list flex-row main-between">
               <li>
-                <svg-icon
-                          icon-class="main-page" />
+                <svg-icon icon-class="main-page" />
                 <span class="item">我的主页</span>
               </li>
               <li>
-                <svg-icon
-                          icon-class="bookshelf" />
+                <svg-icon icon-class="bookshelf" />
                 <span class="item">我的书架</span>
               </li>
             </ul>
 
-            <ul
-                class="footer list flex-row main-between">
+            <ul class="footer list flex-row main-between">
               <li>
                 <span class="item">我的设置</span>
               </li>
@@ -62,7 +54,8 @@
               </li>
             </ul>
           </section>
-          <img class="avatar" slot="reference"
+          <img class="avatar"
+               slot="reference"
                :src="avatarUrl" />
         </el-popover>
       </section>
@@ -91,8 +84,10 @@
                @click="getValidateCode" />
         </el-form>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="login"
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button type="primary"
+                   @click="login"
                    :loading="loading">登录</el-button>
       </span>
     </el-dialog>
@@ -102,33 +97,23 @@
 <script>
 import { mapGetters } from 'vuex'
 
+import { constantRoutes } from '@/router'
+import { filterAsyncRoutes } from '@/utils/router'
+
 export default {
   name: 'NavHeader',
   data () {
     return {
-      navs: [{
-        label: '首页',
-        name: 'home'
-      }, {
-        label: '沸点',
-        name: 'boiling'
-      }, {
-        label: '课程',
-        name: 'subjects'
-      }, {
-        label: '活动',
-        name: 'activity'
-      }],
-      currentIndex: -1,
       loginVisible: false,
       username: '',
       password: '',
       validateCode: '',
-      loading: false,
+      loading: false
     }
   },
   computed: {
     ...mapGetters('user', ['accessToken', 'userInfo']),
+    ...mapGetters('app', ['href']),
     avatarUrl () {
       if (this.userInfo && this.userInfo.avatarUrl) {
         return this.userInfo.avatarUrl
@@ -138,13 +123,17 @@ export default {
     },
     validateCodeImg () {
       return this.$store.state.user.validateCodeImg
+    },
+    navs () {
+      return filterAsyncRoutes(constantRoutes)
     }
   },
   methods: {
     toTarget (item, index) {
-      this.currentIndex = index
       this.$router.push({
-        name: item.name
+        path: item.path
+      }).then(() => {
+        this.$store.dispatch('app/updateHref', item.path)
       })
     },
     toLogin () {
@@ -206,10 +195,8 @@ export default {
         color: #1e80ff;
         cursor: pointer;
       }
-      &.is-active {
-        color: #1e80ff;
-      }
-      .border-line {
+      &::after {
+        content: '';
         display: inline-block;
         width: 0;
         height: 1px;
@@ -219,7 +206,10 @@ export default {
         top: 100%;
         left: -50%;
         transform: translateX(50%);
-        &.is-active {
+      }
+      &.is-active {
+        color: #1e80ff;
+        &::after {
           width: 100%;
           background-color: #1e80ff;
         }

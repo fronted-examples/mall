@@ -1,6 +1,7 @@
 import {
   SET_POSTS,
-  GET_POSTS
+  GET_POSTS,
+  UPDATE_HREF
 } from './constants'
 import axios from 'axios'
 
@@ -16,6 +17,9 @@ const actions = {
   },
   [GET_POSTS]: (context, data) => {
     context.commit(GET_POSTS)
+  },
+  [UPDATE_HREF]: (context, data) => {
+    context.commit(UPDATE_HREF, data)
   }
 }
 

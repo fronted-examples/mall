@@ -1,5 +1,6 @@
 const states = {
-  posts:[]
+  posts: [],
+  href: ''
 }
 
 export default states

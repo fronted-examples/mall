@@ -12,7 +12,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/icons'
 import '@/styles/index.scss' // 全局scss样式
 
-import 'reset-css'
+if (process.env.VUE_ENV === 'client') {
+  require('reset-css')
+}
 
 
 Vue.use(VueMeta)

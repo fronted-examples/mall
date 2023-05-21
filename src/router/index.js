@@ -9,6 +9,8 @@ const Activity = resolve => require(['@/views/activity/index'], resolve)
 const Subjects = resolve => require(['@/views/subjects/index'], resolve)
 const Boiling = resolve => require(['@/views/boiling/index'], resolve)
 
+const Write = resolve => require(['@/views/Write/index'], resolve)
+
 const NotFound = resolve => require(['@/views/not-found/index'], resolve)
 const Forbidden = resolve => require(['@/views/forbidden/index'], resolve)
 
@@ -78,6 +80,16 @@ export const constantRoutes = [
       name: 'activity',
       component: Activity,
     }]
+  },
+  {
+    path: '/mall/Write',
+    name: 'Write',
+    component: Write,
+    meta: {
+      title: '写文章',
+      icon: 'user',
+      hidden: true
+    }
   },
   {
     path: '/mall/forbidden',

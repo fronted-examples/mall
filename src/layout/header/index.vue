@@ -38,6 +38,11 @@
 
             <ul
                 class="content list flex-row main-between">
+              <li @click="toWrite">
+                <svg-icon icon-class="article" />
+                <span
+                      class="item">写&nbsp;&nbsp;&nbsp;文章</span>
+              </li>
               <li>
                 <svg-icon
                           icon-class="main-page" />
@@ -138,6 +143,11 @@ export default {
         path: item.path
       }).then(() => {
         this.$store.dispatch('app/updateHref', item.path)
+      })
+    },
+    toWrite () {
+      this.$router.push({
+        name: 'Write'
       })
     },
     toLogin () {
@@ -250,6 +260,7 @@ export default {
         margin-top: 10px;
         padding-bottom: 10px;
         border-bottom: 1px solid rgba(228, 230, 235, 0.5);
+        flex-wrap: wrap;
         li {
           width: 104px;
           height: 40px;

@@ -1,7 +1,10 @@
 <template>
-  <el-header class="nav-header flex-row main-between">
-    <section class="container flex-row main-between">
-      <section class="left-box flex-row secondary-center">
+  <el-header
+             class="nav-header flex-row main-between">
+    <section
+             class="container flex-row main-between">
+      <section
+               class="left-box flex-row secondary-center">
         <span v-for="(item, index) of navs"
               :key="index"
               class="nav-item flex-inline main-center secondary-center"
@@ -11,41 +14,44 @@
         </span>
       </section>
 
-      <section class="right-box flex-row secondary-center">
+      <section
+               class="right-box flex-row secondary-center">
         <svg-icon icon-class="notice" />
         <el-button v-if="!accessToken"
                    class="login-btn"
-                   type="primary"
-                   plain
+                   type="primary" plain
                    size="medium"
                    @click="toLogin">登录 |
           注册</el-button>
 
         <el-popover :appendToBody="false"
-                    placement="bottom"
-                    width="242"
+                    placement="bottom" width="242"
                     trigger="click"
                     v-if="accessToken">
           <section class="user-info">
-            <div class="header flex-row secondary-center">
-              <img class="avatar"
-                   slot="reference"
+            <div
+                 class="header flex-row secondary-center">
+              <img class="avatar" slot="reference"
                    :src="avatarUrl" />
               <span class="nickname">昵称</span>
             </div>
 
-            <ul class="content list flex-row main-between">
+            <ul
+                class="content list flex-row main-between">
               <li>
-                <svg-icon icon-class="main-page" />
+                <svg-icon
+                          icon-class="main-page" />
                 <span class="item">我的主页</span>
               </li>
               <li>
-                <svg-icon icon-class="bookshelf" />
+                <svg-icon
+                          icon-class="bookshelf" />
                 <span class="item">我的书架</span>
               </li>
             </ul>
 
-            <ul class="footer list flex-row main-between">
+            <ul
+                class="footer list flex-row main-between">
               <li>
                 <span class="item">我的设置</span>
               </li>
@@ -54,8 +60,7 @@
               </li>
             </ul>
           </section>
-          <img class="avatar"
-               slot="reference"
+          <img class="avatar" slot="reference"
                :src="avatarUrl" />
         </el-popover>
       </section>
@@ -84,10 +89,8 @@
                @click="getValidateCode" />
         </el-form>
       </el-form>
-      <span slot="footer"
-            class="dialog-footer">
-        <el-button type="primary"
-                   @click="login"
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="login"
                    :loading="loading">登录</el-button>
       </span>
     </el-dialog>
@@ -130,6 +133,7 @@ export default {
   },
   methods: {
     toTarget (item, index) {
+      console.log('path:' + item.path)
       this.$router.push({
         path: item.path
       }).then(() => {

@@ -24,64 +24,63 @@ Router.prototype.push = function push (location, onResolve, onReject) {
 
 export const constantRoutes = [
   {
-    path: '/',
+    path: '/mall',
     component: Layout,
-    redirect: '/',
+    redirect: '/mall/',
     meta: {
       title: '首页',
       icon: 'user'
     },
     children: [{
-      path: '/',
+      path: '/mall/',
       name: 'home',
       component: Home
     }]
   },
   {
-    path: '/boiling',
+    path: '/mall/boiling',
     component: Layout,
-    redirect: '/boiling',
+    redirect: '/mall/boiling',
     meta: {
       title: '沸点',
       icon: 'user'
     },
     children: [{
-      path: '/boiling',
+      path: '/mall/boiling',
       name: 'boiling',
       component: Boiling,
     }]
   },
   {
-    path: '/subjects',
+    path: '/mall/subjects',
     component: Layout,
-    redirect: '/subjects',
-
+    redirect: '/mall/subjects',
     meta: {
       title: '课程',
       icon: 'user'
     },
     children: [{
-      path: '/subjects',
+      path: '/mall/subjects',
       name: 'subjects',
       component: Subjects,
     }]
   },
   {
-    path: '/activity',
+    path: '/mall/activity',
     component: Layout,
-    redirect: '/activity',
+    redirect: '/mall/activity',
     meta: {
       title: '活动',
       icon: 'user'
     },
     children: [{
-      path: '/activity',
+      path: '/mall/activity',
       name: 'activity',
       component: Activity,
     }]
   },
   {
-    path: '/forbidden',
+    path: '/mall/forbidden',
     component: Forbidden,
     meta: {
       title: '403',
@@ -90,7 +89,7 @@ export const constantRoutes = [
     }
   },
   {
-    path: '*',
+    path: '/mall/*',
     component: NotFound,
     meta: {
       title: '404',

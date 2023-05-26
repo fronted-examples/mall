@@ -82,7 +82,7 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/mall/Write',
+    path: '/mall/write',
     name: 'Write',
     component: Write,
     meta: {

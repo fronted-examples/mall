@@ -9,7 +9,7 @@ import { createStore } from './store/index'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-import mavonEditor from 'mavon-editor'
+// import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
 import '@/icons'
@@ -17,12 +17,15 @@ import '@/styles/index.scss' // 全局scss样式
 
 if (process.env.VUE_ENV === 'client') {
   require('reset-css')
+
+  const mavonEditor = require('mavon-editor')
+  Vue.use(mavonEditor)
 }
 
 
 Vue.use(VueMeta)
 Vue.use(ElementUI)
-Vue.use(mavonEditor)
+// Vue.use(mavonEditor)
 
 Vue.mixin({
   metaInfo: {

@@ -25,7 +25,6 @@ if (process.env.VUE_ENV === 'client') {
 
 Vue.use(VueMeta)
 Vue.use(ElementUI)
-// Vue.use(mavonEditor)
 
 Vue.mixin({
   metaInfo: {
@@ -34,12 +33,12 @@ Vue.mixin({
   }
 })
 
-
 // 需要返回一个应用程序工厂: 返回Vue实例和Router实例
 export function createApp (context) {
   // 处理首屏，就要先处理路由跳转
   const router = createRouter()
   const store = createStore()
+  console.log('app createApp', context)
 
   // routerGuard(router, store)
 

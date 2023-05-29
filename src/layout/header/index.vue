@@ -1,6 +1,6 @@
 <template>
-  <el-header
-             class="nav-header flex-row main-between">
+  <el-header class="nav-header flex-row main-between"
+             v-if="headerVisible">
     <section
              class="container flex-row main-between">
       <section
@@ -17,7 +17,7 @@
       <section
                class="right-box flex-row secondary-center">
         <svg-icon icon-class="notice" />
-        <el-button v-if="!accessToken"
+        <el-button v-show="!accessToken"
                    class="login-btn"
                    type="primary" plain
                    size="medium"
@@ -27,7 +27,8 @@
         <el-popover :appendToBody="false"
                     placement="bottom" width="242"
                     trigger="click"
-                    v-if="accessToken">
+                    v-model="popoverVisible"
+                    v-show="accessToken">
           <section class="user-info">
             <div
                  class="header flex-row secondary-center">
@@ -113,6 +114,8 @@ export default {
   data () {
     return {
       loginVisible: false,
+      popoverVisible: false,
+      headerVisible: true,
       username: '',
       password: '',
       validateCode: '',
@@ -136,18 +139,29 @@ export default {
       return filterAsyncRoutes(constantRoutes)
     }
   },
+  watch: {
+    $route (to, from) {
+      this.$store.dispatch('app/updateHref', to.path)
+    }
+  },
   methods: {
     toTarget (item, index) {
-      console.log('path:' + item.path)
       this.$router.push({
         path: item.path
       }).then(() => {
-        this.$store.dispatch('app/updateHref', item.path)
+        console.log('path:' + item.path)
       })
     },
     toWrite () {
       this.$router.push({
-        name: 'Write'
+        name: 'Write',
+        query: {
+          id: 1
+        }
+      }).then(() => {
+        this.popoverVisible = false
+      }).catch((err) => {
+        console.log('write err: ' + err)
       })
     },
     toLogin () {

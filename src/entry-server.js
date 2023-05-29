@@ -14,6 +14,8 @@ export default async (context) => {
 
   const matchedComponents = router.getMatchedComponents()
 
+  console.log('matchedComponents: ', matchedComponents)
+
   await Promise.all(
     matchedComponents.map((component) => {
       if (component.asyncData) {

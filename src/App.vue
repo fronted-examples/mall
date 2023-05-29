@@ -8,11 +8,6 @@
 <script>
 export default {
   name: "App",
-  methods: {
-    toPost () {
-      location.href = '/posts'
-    }
-  }
 };
 </script>
 

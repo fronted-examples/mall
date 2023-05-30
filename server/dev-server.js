@@ -63,7 +63,7 @@ Object.keys(config.dev.proxyTable).forEach(function (context) {
  * 并且vue-router设置的404页面无法进入
  */
 server.get('/*', async (req, res) => {
-  console.log('server get: ', req)
+  // console.log('server get: ', req)
   // 等待有了 Renderer 渲染器以后，调用 render 函数
   await onReady
   render(req, res)

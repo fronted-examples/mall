@@ -106,6 +106,10 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': isProd ? require('../config/prod.env') : require('../config/dev.env')
     }),
+    new webpack.ProvidePlugin({
+      'window.Quill': 'quill/dist/quill.js',
+      'Quill': 'quill/dist/quill.js'
+    }),
     new CopyWebpackPlugin([{
       from: path.resolve(__dirname, '../static'),
       to: 'static',

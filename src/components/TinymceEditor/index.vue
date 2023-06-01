@@ -105,12 +105,12 @@ export default {
     plugins: {
       type: [String, Array],
       default:
-        'anchor link lists image autolink imagetools directionality hr searchreplace pagebreak indent2em importword media code table textcolor wordcount contextmenu paste colorpicker emoticons fullscreen lineheight letterspacing insertdatetime preview'
+        'anchor link lists image autolink imagetools directionality hr searchreplace pagebreak indent2em importword media code table wordcount paste emoticons fullscreen lineheight letterspacing insertdatetime preview'
     },
     toolbar: {
       type: [String, Array],
       default:
-        'undo redo | importword preview fullscreen searchreplace code | paste anchor hr pagebreak | fontsizeselect | fontselect | formatselect | ltr rtl | subscript superscript | emoticons | insertdatetime | forecolor backcolor bold italic underline strikethrough | lineheight letterspacing | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent indent2em | lists image imagetools_toolbar media table | removeformat blockquote link unlink |',
+        'undo redo | importword preview fullscreen searchreplace code | paste anchor hr pagebreak | fontsizeselect | fontselect | formatselect | ltr rtl | subscript superscript | emoticons | insertdatetime | forecolor backcolor bold italic underline strikethrough | lineheight letterspacing | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent indent2em | image media table | removeformat blockquote link unlink |',
       branding: false,
     },
     width: {

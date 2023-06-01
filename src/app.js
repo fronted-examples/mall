@@ -38,7 +38,6 @@ export function createApp (context) {
   // 处理首屏，就要先处理路由跳转
   const router = createRouter()
   const store = createStore()
-  console.log('app createApp', context)
 
   // routerGuard(router, store)
 

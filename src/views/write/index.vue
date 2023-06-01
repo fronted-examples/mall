@@ -8,37 +8,85 @@
       <div class="write-operate flex-row">
         <el-button @click="save">保 存 草
           稿</el-button>
+        <el-popover placement="top-start"
+                    width="200" trigger="hover"
+                    :content="switchTitle"
+                    class="switch-btn">
+          <svg-icon slot="reference"
+                    icon-class="switch"
+                    @click="toggleEditor" />
+        </el-popover>
         <el-button type="primary"
                    @click="publish">发
           布</el-button>
       </div>
     </div>
-    <markdown-editor class="content"
-                     v-model="markdownVal" />
+
+    <section class="content">
+      <markdown-editor v-if="!richVisible"
+                       v-model="markdownVal" />
+
+      <TinymceEditor v-if="richVisible"
+                     :uploadImage="uploadImage"
+                     v-model="richText" />
+    </section>
   </section>
 </template>
 
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
+import TinymceEditor from '@/components/TinymceEditor'
+
 export default {
   name: 'Write',
+  metaInfo: {
+    title: '写文章'
+  },
   components: {
-    MarkdownEditor
+    MarkdownEditor,
+    TinymceEditor
   },
   data () {
     return {
       title: '',
-      markdownVal: ''
+      switchTitle: '切换为富文本编辑器',
+      markdownVal: '',
+      richText: '',
+      richVisible: false
     }
   },
   watch: {
+    richVisible (newVal) {
+      this.switchTitle = newVal ? '切换为Markdown编辑器' : '切换为富文本编辑器'
+    },
     markdownVal (newVal) {
       console.log('markdownVal: ', newVal)
+    },
+    richText (newVal) {
+      console.log('richText: ', newVal)
     }
   },
+  created () {
+    this.richVisible = this.$route.query.richVisible
+  },
   methods: {
+    toggleEditor () {
+      this.richVisible = !this.richVisible
+      this.$router.replace({
+        path: this.$route.path,
+        query: {
+          ...this.$route.query,
+          richVisible: this.richVisible
+        }
+      })
+    },
     save () { },
-    publish () { }
+    publish () { },
+    uploadImage (file, success, fail) {
+      console.log(file)
+
+      success(1)
+    }
   }
 }
 </script>
@@ -57,6 +105,17 @@ export default {
       ::v-deep .el-input__inner {
         border: none;
         font-size: 24px;
+      }
+    }
+
+    .switch-btn {
+      width: 80px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .svg-icon {
+        font-size: 16px;
       }
     }
   }

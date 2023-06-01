@@ -38,8 +38,6 @@ const render = async (req, res) => {
       url: req.url,
     })
 
-    console.log('req.url: ', req.url)
-
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     res.end(html)
   } catch (error) {

@@ -35,7 +35,7 @@ const render = async (req, res) => {
       url: req.url,
     })
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
-    res.end(minify(html, { collapseWhitespace: true, minifyCSS: true}))
+    res.end(minify(html, { collapseWhitespace: true, minifyCSS: true }))
   } catch (error) {
     console.log('err: ', error)
     res.status(500).end('Internal Server Error')
@@ -48,7 +48,7 @@ const render = async (req, res) => {
  * 并且vue-router设置的404页面无法进入
  */
 server.get(
-  '/mall/*',
+  '/*',
   render // 生产模式：使用构建好的包直接渲染
 )
 

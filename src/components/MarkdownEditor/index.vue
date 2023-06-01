@@ -83,16 +83,16 @@ export default {
       this.$emit('save', val, render)
     },
     handleHtmlCode (status, val) {
-      this.emit('htmlCode', status, val)
+      this.$emit('htmlCode', status, val)
     },
     handlePreviewToggle (status, val) {
-      this.emit('previewToggle', status, val)
+      this.$emit('previewToggle', status, val)
     },
     handleHelpToggle (status, val) {
-      this.emit('helpToggle', status, val)
+      this.$emit('helpToggle', status, val)
     },
     handleReadModel (status, val) {
-      this.emit('readModel', status, val)
+      this.$emit('readModel', status, val)
     }
   }
 }

@@ -38,7 +38,7 @@ import MarkdownEditor from '@/components/MarkdownEditor'
 import TinymceEditor from '@/components/TinymceEditor'
 
 export default {
-  name: 'Write',
+  name: 'Editor',
   metaInfo: {
     title: '写文章'
   },

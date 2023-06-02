@@ -9,7 +9,7 @@ const Activity = resolve => require(['@/views/activity/index'], resolve)
 const Subjects = resolve => require(['@/views/subjects/index'], resolve)
 const Boiling = resolve => require(['@/views/boiling/index'], resolve)
 
-const Write = resolve => require(['@/views/Write/index'], resolve)
+const Editor = resolve => require(['@/views/editor/index'], resolve)
 
 const NotFound = resolve => require(['@/views/not-found/index'], resolve)
 const Forbidden = resolve => require(['@/views/forbidden/index'], resolve)
@@ -31,12 +31,20 @@ export const constantRoutes = [
     redirect: '/mall/',
     meta: {
       title: '首页',
-      icon: 'user'
+      icon: 'user',
+      keywords: '首页',
+      description: '首页'
     },
     children: [{
       path: '/mall/',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: {
+        title: '首页',
+        icon: 'user',
+        keywords: '首页',
+        description: '首页'
+      },
     }]
   },
   {
@@ -45,12 +53,20 @@ export const constantRoutes = [
     redirect: '/mall/boiling',
     meta: {
       title: '沸点',
-      icon: 'user'
+      icon: 'user',
+      keywords: '沸点',
+      description: '沸点'
     },
     children: [{
       path: '/mall/boiling',
       name: 'boiling',
       component: Boiling,
+      meta: {
+        title: '沸点',
+        icon: 'user',
+        keywords: '沸点',
+        description: '沸点'
+      },
     }]
   },
   {
@@ -59,12 +75,20 @@ export const constantRoutes = [
     redirect: '/mall/subjects',
     meta: {
       title: '课程',
-      icon: 'user'
+      icon: 'user',
+      keywords: '课程',
+      description: '课程'
     },
     children: [{
       path: '/mall/subjects',
       name: 'subjects',
       component: Subjects,
+      meta: {
+        title: '课程',
+        icon: 'user',
+        keywords: '课程',
+        description: '课程'
+      },
     }]
   },
   {
@@ -73,18 +97,26 @@ export const constantRoutes = [
     redirect: '/mall/activity',
     meta: {
       title: '活动',
-      icon: 'user'
+      icon: 'user',
+      keywords: '活动',
+      description: '活动'
     },
     children: [{
       path: '/mall/activity',
       name: 'activity',
       component: Activity,
+      meta: {
+        title: '活动',
+        icon: 'user',
+        keywords: '活动',
+        description: '活动'
+      },
     }]
   },
   {
-    path: '/mall/write',
-    name: 'Write',
-    component: Write,
+    path: '/mall/editor',
+    name: 'editor',
+    component: Editor,
     meta: {
       title: '写文章',
       icon: 'user',

@@ -5,11 +5,11 @@
              class="container flex-row main-between">
       <section
                class="left-box flex-row secondary-center">
-        <span v-for="(item, index) of navs"
+        <span v-for="(item, index) of navList"
               :key="index"
               class="nav-item flex-inline main-center secondary-center"
               :class="[href === item.path ? 'is-active' : '']"
-              @click="toTarget(item, index)">
+              @click="toNav(item, index)">
           {{ item.meta.title }}
         </span>
       </section>
@@ -39,20 +39,13 @@
 
             <ul
                 class="content list flex-row main-between">
-              <li @click="toWrite">
-                <svg-icon icon-class="article" />
-                <span
-                      class="item">写&nbsp;&nbsp;&nbsp;文章</span>
-              </li>
-              <li>
+              <li v-for="(menu, index) of menuList"
+                  :key="index"
+                  @click="toMenu(menu, index)">
                 <svg-icon
-                          icon-class="main-page" />
-                <span class="item">我的主页</span>
-              </li>
-              <li>
-                <svg-icon
-                          icon-class="bookshelf" />
-                <span class="item">我的书架</span>
+                          :icon-class="menu.icon" />
+                <span class="item"
+                      v-html="menu.label"></span>
               </li>
             </ul>
 
@@ -104,13 +97,35 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
-import { constantRoutes } from '@/router'
-import { filterAsyncRoutes } from '@/utils/router'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'NavHeader',
+  props: {
+    accessToken: {
+      type: String,
+      required: true,
+      default: ''
+    },
+    userInfo: {
+      type: Object,
+      required: true,
+      default: () => ({})
+    },
+    href: {
+      type: String,
+      required: true,
+      default: ''
+    },
+    navList: {
+      type: Array,
+      required: true
+    },
+    menuList: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
       loginVisible: false,
@@ -123,8 +138,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('user', ['accessToken', 'userInfo']),
-    ...mapGetters('app', ['href']),
     avatarUrl () {
       if (this.userInfo && this.userInfo.avatarUrl) {
         return this.userInfo.avatarUrl
@@ -134,35 +147,19 @@ export default {
     },
     validateCodeImg () {
       return this.$store.state.user.validateCodeImg
-    },
-    navs () {
-      return filterAsyncRoutes(constantRoutes)
-    }
-  },
-  watch: {
-    $route (to, from) {
-      this.$store.dispatch('app/updateHref', to.path)
     }
   },
   methods: {
-    toTarget (item, index) {
-      this.$router.push({
-        path: item.path
-      }).then(() => {
-        console.log('path:' + item.path)
-      })
+    ...mapActions({
+      userLogin: 'user/login',
+      userLogout: 'user/logout',
+      getRandomCode: 'user/getRandomCode'
+    }),
+    toNav (item, index) {
+      this.$emit('navClick', item, index)
     },
-    toWrite () {
-      this.$router.push({
-        name: 'Write',
-        query: {
-          id: 1
-        }
-      }).then(() => {
-        this.popoverVisible = false
-      }).catch((err) => {
-        console.log('write err: ' + err)
-      })
+    toMenu (item, index) {
+      this.$emit('menuClick', item, index)
     },
     toLogin () {
       this.loginVisible = true
@@ -170,20 +167,21 @@ export default {
     },
     login () {
       this.loading = true
-      this.$store.dispatch('user/login', {
+      const params = {
         username: this.username,
         password: this.password,
         validateCode: this.validateCode
-      }).then(() => {
+      }
+      this.userLogin(params).then(() => {
         this.loading = false
         this.loginVisible = false
       })
     },
     logout () {
-      this.$store.dispatch('user/logout')
+      this.userLogout()
     },
     getValidateCode () {
-      this.$store.dispatch('user/getRandomCode')
+      this.getRandomCode()
     }
   }
 }

@@ -1,7 +1,8 @@
 import {
   SET_POSTS,
   GET_POSTS,
-  UPDATE_HREF
+  UPDATE_HREF,
+  UPDATE_META_INFO
 } from './constants'
 import { sessionMemory } from '@/utils/storage'
 
@@ -18,6 +19,9 @@ const mutations = {
       name: 'href',
       value: data
     })
+  },
+  [UPDATE_META_INFO]: (state, data) => {
+    state.metaInfo = data
   }
 }
 

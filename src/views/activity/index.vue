@@ -9,6 +9,9 @@ export default {
   name: 'Activity',
   data () {
     return {}
+  },
+  beforeCreate () {
+    console.log('meta: ', this)
   }
 }
 </script>

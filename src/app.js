@@ -9,7 +9,6 @@ import { createStore } from './store/index'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-// import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
 import '@/icons'
@@ -26,12 +25,13 @@ if (process.env.VUE_ENV === 'client') {
 Vue.use(VueMeta)
 Vue.use(ElementUI)
 
-Vue.mixin({
-  metaInfo: {
-    // 混入选项 %s 为用户自定义数据
-    titleTemplate: '%s - 购物天堂'
-  }
-})
+// 这块不要，否则会导致走asycData()渲染时，title为'- 购物天堂'
+// Vue.mixin({
+//   metaInfo: {
+//     // 混入选项 %s 为用户自定义数据
+//     titleTemplate: '%s - 购物天堂'
+//   }
+// })
 
 // 需要返回一个应用程序工厂: 返回Vue实例和Router实例
 export function createApp (context) {

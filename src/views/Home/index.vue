@@ -1,23 +1,49 @@
 <template>
   <section class="home">
-    主页
-    <svg-icon icon-class="html" />
+    <nav v-for="(nav, index) of navList"
+         :key="index">
+      <div>{{ nav.name }}</div>
+    </nav>
   </section>
 </template>
 
 <script>
 export default {
   name: 'Home',
-  metaInfo: {
-    title: '首页'
+  props: {
+    tdk: Object
   },
   data () {
     return {
-
+      navList: [{
+        name: '关注',
+        icon: '',
+        path: ''
+      }, {
+        name: '综合',
+        icon: '',
+        path: ''
+      }, {
+        name: '前端',
+        icon: '',
+        path: ''
+      }, {
+        name: '后端',
+        icon: '',
+        path: ''
+      }, {
+        name: 'Android',
+        icon: '',
+        path: ''
+      }, {
+        name: 'iOS',
+        icon: '',
+        path: ''
+      }]
     }
   },
   beforeCreate () {
-    // console.log('gbl: ', global.window)
+    // console.log('meta: ', this)
   }
 }
 </script>

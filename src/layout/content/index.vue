@@ -6,21 +6,7 @@
 
 <script>
 export default {
-  name: 'MainContent',
-  props: {
-    tdk: Object
-  },
-  metaInfo () {
-    const title = this._props.tdk.title
-
-    return {
-      title: `${title} - 购物天堂`,
-      meta: [
-        { name: 'keywords', content: this._props.tdk.keywords },
-        { name: 'description', content: this._props.tdk.description }
-      ]
-    }
-  }
+  name: 'MainContent'
 }
 </script>
 

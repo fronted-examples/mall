@@ -14,6 +14,8 @@ import 'mavon-editor/dist/css/index.css'
 import '@/icons'
 import '@/styles/index.scss' // 全局scss样式
 
+import HeadMixin from '@/utils/head'
+
 if (process.env.VUE_ENV === 'client') {
   require('reset-css')
 
@@ -24,6 +26,7 @@ if (process.env.VUE_ENV === 'client') {
 
 Vue.use(VueMeta)
 Vue.use(ElementUI)
+Vue.mixin(HeadMixin)
 
 // 这块不要，否则会导致走asycData()渲染时，title为'- 购物天堂'
 // Vue.mixin({

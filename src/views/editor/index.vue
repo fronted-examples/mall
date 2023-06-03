@@ -39,9 +39,6 @@ import TinymceEditor from '@/components/TinymceEditor'
 
 export default {
   name: 'Editor',
-  metaInfo: {
-    title: '写文章'
-  },
   components: {
     MarkdownEditor,
     TinymceEditor

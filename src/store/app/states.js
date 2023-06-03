@@ -1,6 +1,5 @@
 const states = {
   posts: [],
-  metaInfo: {},
   href: ''
 }
 

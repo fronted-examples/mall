@@ -6,7 +6,7 @@
                 :userInfo="userInfo" :href="href"
                 @navClick="handleNavClick"
                 @menuClick="handleMenuClick" />
-    <main-content :tdk="tdk" />
+    <main-content />
   </el-container>
 </template>
 <script>
@@ -37,12 +37,7 @@ export default {
         label: '我的书架',
         routeName: 'bookshelf',
         icon: 'bookshelf'
-      }],
-      tdk: {
-        title: '',
-        keywords: '',
-        description: ''
-      }
+      }]
     }
   },
   computed: {
@@ -56,16 +51,6 @@ export default {
     $route (to, from) {
       this.updateHref(to.path)
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    // 在渲染该组件的对应路由被 confirm 前调用
-    // 不！能！获取组件实例 `this`
-    // 因为当守卫执行前，组件实例还没被创建
-    next(vm => {
-      vm.tdk.title = to.meta.title
-      vm.tdk.keywords = to.meta.keywords
-      vm.tdk.description = to.meta.description
-    })
   },
   methods: {
     ...mapActions({

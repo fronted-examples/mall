@@ -1,3 +1,4 @@
+import { userInfo } from 'os'
 import {
   LOGIN,
   LOGOUT,
@@ -37,9 +38,9 @@ const actions = {
   },
   [GET_USER_INFO]: (context) => {
     return new Promise((resolve, reject) => {
-      getUserInfo().then(({ code, data }) => {
+      getUserInfo().then(({ code, data: { userInfo } }) => {
         if (code === 200) {
-          context.commit(GET_USER_INFO, data)
+          context.commit(GET_USER_INFO, userInfo)
           resolve()
         }
       }).catch(error => {

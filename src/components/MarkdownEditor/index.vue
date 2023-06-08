@@ -1,6 +1,8 @@
 <template>
   <mavon-editor class="markdown"
                 :toolbars="toolbars"
+                :editable="editable"
+                :defaultOpen="defaultOpen"
                 @imgAdd="addImage"
                 @imgDel="delImage"
                 @change="handleChange"
@@ -64,9 +66,18 @@ export default {
         }
       }
     },
-    editable: Boolean,
+    editable: {
+      type: Boolean,
+      default: true
+    },
     placeholder: String,
-    defaultOpen: String
+    defaultOpen: {
+      type: String,
+      default: 'preview',
+      validate: (value) => {
+        return ['edit', 'preview'].indexOf(value) !== -1
+      }
+    }
   },
   methods: {
     addImage (filename, image) {

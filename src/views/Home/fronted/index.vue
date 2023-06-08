@@ -1,12 +1,12 @@
 <template>
-  <section class="activity">
-    活动
+  <section class="fronted">
+    fronted
   </section>
 </template>
 
 <script>
 export default {
-  name: 'Activity',
+  name: 'Fronted',
   data () {
     return {}
   }

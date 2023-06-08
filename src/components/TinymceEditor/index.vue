@@ -8,6 +8,7 @@
 <script>
 
 import Editor from '@tinymce/tinymce-vue'
+import { getTimeId } from '@/utils/utils.js'
 
 let tinymce
 if (process.env.VUE_ENV === 'client') {
@@ -61,7 +62,7 @@ export default {
       default: function () { }
     },
     uploadFile: {
-      type: Promise,
+      type: Function,
       require: false,
       default: function () { }
     },
@@ -105,12 +106,27 @@ export default {
     plugins: {
       type: [String, Array],
       default:
-        'anchor link lists image autolink imagetools directionality hr searchreplace pagebreak indent2em importword media code table wordcount paste emoticons fullscreen lineheight letterspacing insertdatetime preview'
+        'anchor link lists image imagetools media autolink directionality hr searchreplace pagebreak indent2em importword code table wordcount paste emoticons fullscreen lineheight letterspacing insertdatetime preview'
     },
     toolbar: {
       type: [String, Array],
       default:
-        'undo redo | importword preview fullscreen searchreplace code | paste anchor hr pagebreak | fontsizeselect | fontselect | formatselect | ltr rtl | subscript superscript | emoticons | insertdatetime | forecolor backcolor bold italic underline strikethrough | lineheight letterspacing | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent indent2em | image media table | removeformat blockquote link unlink |',
+        `| undo redo
+         | importword preview fullscreen searchreplace code
+         | paste anchor hr pagebreak
+         | fontsizeselect
+         | fontselect
+         | formatselect
+         | ltr rtl
+         | subscript superscript
+         | emoticons
+         | insertdatetime
+         | forecolor backcolor bold italic underline strikethrough
+         | lineheight letterspacing
+         | alignleft aligncenter alignright alignjustify
+         | bullist numlist outdent indent indent2em
+         | image media table
+         | removeformat blockquote link unlink`,
       branding: false,
     },
     width: {
@@ -126,18 +142,36 @@ export default {
     return {
       //初始化配置
       init: {
-        language_url: '/dist/static/tinymce/langs/zh_CN.js',
-        language: 'zh_CN',
-        skin_url: '/dist/static/tinymce/skins/ui/oxide',
         width: this.width,
         height: this.height,
-        object_resizing: false,
+        font_formats: this.fonts,
+        plugins: this.plugins,
+        toolbar: this.toolbar,
+        draggable_modal: true,
+        menubar: false,
+        auto_focus: true,
+        branding: false,
+        image_advtab: true,
+        statusbar: true, // 隐藏底部状态栏
+        paste_retain_style_properties: 'all',
+        paste_word_valid_elements: '*[*]', // word需要它
+        paste_data_images: true, // 粘贴的同时能把内容里的图片自动上传，非常强力的功能
+        paste_convert_word_fake_lists: false, // 插入word文档需要该属性
+        paste_webkit_styles: 'all',
+        paste_merge_formats: true,
+        nonbreaking_force_tab: false,
+        paste_auto_cleanup_on_paste: false,
         placeholder: '请输入正文...',
         selector: 'tinymce-editor',
-        auto_focus: true,
-        content_css: '/dist/static/tinymce/skins/content/default/content.min.css',
-        content_security_policy: "default-src 'self' 'unsafe-inline'",
         cache_suffix: `?v=${new Date().getTime()}`,
+        language: 'zh_CN',
+        language_url: '/dist/static/tinymce/langs/zh_CN.js',
+        skin_url: '/dist/static/tinymce/skins/ui/oxide',
+        content_css: '/dist/static/tinymce/skins/content/default/content.min.css',
+        content_security_policy: `worker-src blob:;
+                                  child-src blob: gap:;
+                                  img-src * 'self' blob: data:;
+                                  default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:"`,
         content_style: `
           .mce-content-body {
             width: ${this.width};
@@ -147,7 +181,7 @@ export default {
             width: auto !important;
           }
           html, body                { height:100%; }
-          img                       { max-width:100%; display:block;height:auto; }
+          img                       { max-width:100%; height:auto; }
           a                         { text-decoration: none; }
           iframe                    { width: 100%; }
           p                         { line-height:1.6; margin: 0px; }
@@ -157,26 +191,7 @@ export default {
         `,
         lineheight_val: '1 1.1 1.2 1.3 1.4 1.5 2', // 非官方插件用法
         fontsize_formats: '5px 5.5px 6.5px 7.5px 8px 9px 10px 10.5px 11px 12px 14px 16px 18px 20px 24px 26px 28px 36px 48px 56px 72px',
-        font_formats: this.fonts,
-        style_formats_merge: true,
-        style_formats_autohide: true,
-        file_picker_types: 'image media',
-        plugins: this.plugins,
-        toolbar: this.toolbar,
-        draggable_modal: true,
-        branding: false,
-        menubar: false,
-        toolbar_drawer: true,
-        statusbar: true, // 隐藏底部状态栏
-        xss_sanitization: true,
-        paste_retain_style_properties: 'all',
-        paste_word_valid_elements: '*[*]', // word需要它
-        paste_data_images: true, // 粘贴的同时能把内容里的图片自动上传，非常强力的功能
-        paste_convert_word_fake_lists: false, // 插入word文档需要该属性
-        paste_webkit_styles: 'all',
-        paste_merge_formats: true,
-        nonbreaking_force_tab: false,
-        paste_auto_cleanup_on_paste: false,
+        // file_picker_types: 'file image media',
         // 监听tinymce初始化完成事件
         setup: (editor) => {
           editor.on('init', (e) => {
@@ -189,6 +204,7 @@ export default {
             this.$emit('input', e.target.innerHTML)
           })
           editor.on('change', (e) => {
+            console.log('change: ', e)
             this.$emit('input', e.level.content)
           })
         },
@@ -199,6 +215,12 @@ export default {
         },
         images_upload_handler: (blobInfo, success, fail) => {
           let file = blobInfo.blob()
+
+          if (Object.prototype.toString.call(blobInfo.blob()) === '[object Blob]') {
+            console.log('file: ', this.blobtoFile(file))
+            file = this.blobtoFile(file)
+          }
+
           this.uploadImage(file, success, fail)
         },
         file_picker_callback: (callback, value, meta) => {
@@ -218,7 +240,6 @@ export default {
             input.click()
 
             input.onchange = (e) => {
-              console.log(e.target.files)
               let file = e.target.files[0]
               let ext = file.name.split('.')[1]
               if (
@@ -231,38 +252,40 @@ export default {
                 return this.$message.error('上传资源只能是 AVI/mov/rmvb/xlsx/FLV/mp4 格式的视频!')
               }
 
-              this.uploadFile(file, value, callback)
+              this.uploadFile(file, callback, value)
             }
             // callback('movie.mp4', { source2: 'alt.ogg', poster: 'image.jpg' })
           }
         },
-        media_url_resolver: (data, resolve) => {
-          try {
-            let videoUri = encodeURI(data.url)
-            let embedHtml = `<p>
-                  <span
-                    class="mce-object mce-object-video"
-                    data-mce-selected="1"
-                    data-mce-object="video"
-                    data-mce-p-width="100%"
-                    data-mce-p-height="auto"
-                    data-mce-p-controls="controls"
-                    data-mce-p-controlslist="nodownload"
-                    data-mce-p-allowfullscreen="true"
-                    data-mce-p-src=${videoUri} >
-                    <video src=${data.url} width="100%" height="auto" controls="controls" controlslist="nodownload">
-                    </video>
-                  </span>
-                </p>
-                <p style="text-align: left;"></p>`
-            resolve({ html: embedHtml })
-          } catch (e) {
-            resolve({ html: '' })
-          }
-        }
+        video_template_callback: data => {
+          return `<video width="300" height="250" controls="controls" src=${data.source} />`
+        },
+        // media_url_resolver: (data, resolve) => {
+        //   try {
+        //     let videoUri = encodeURI(data.url)
+        //     let embedHtml = `<p>
+        //           <span
+        //             data-mce-selected="1"
+        //             data-mce-object="video"
+        //             data-mce-p-controls="controls"
+        //             data-mce-p-controlslist="nodownload"
+        //             data-mce-p-allowfullscreen="true"
+        //             data-mce-p-src=${videoUri}
+        //             data-mce-p-width="300"
+        //             data-mce-p-height="200"
+        //             style="width:300px;height:200px;display:inline-block">
+        //             <video src=${data.url} width="300" height="200" controls="controls" controlslist="nodownload"></video>
+        //           </span>
+        //         </p>
+        //         <p style="text-align: left;"></p>`
+        //     resolve({ html: embedHtml })
+        //   } catch (e) {
+        //     resolve({ html: '' })
+        //   }
+        // }
       },
       richText: this.value,
-      reloading: false,
+      reloading: false
     }
   },
   mounted () {
@@ -279,7 +302,16 @@ export default {
     clear () {
       this.richText = ''
     },
+    blobtoFile (blob) {
+      const { type } = blob
+      const filename = `${getTimeId(8, 12)}.${type.split('/')[1]}`
+      return new File([blob], filename, { type })
+    }//调用上面的dataURLtoBlob方法生成测试的dataURLvar blob = dataURLtoBlob('data:image/png;base64,XXXXXXXX');console.log(blobtoFile(blob))
   }
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mce-object {
+  height: 150px;
+}
+</style>

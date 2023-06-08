@@ -11,27 +11,28 @@ const mutations = {
   [LOGIN]: (state, data) => {
     state.accessToken = data.accessToken
 
-    sessionMemory.setItem({
-      name: 'accessToken',
-      value: data.accessToken
-    })
+    // sessionMemory.setItem({
+    //   name: 'accessToken',
+    //   value: data.accessToken
+    // })
   },
   [LOGOUT]: (state) => {
     state.accessToken = ''
-    state.userInfo = null
-    sessionMemory.removeItem('accessToken')
-    sessionMemory.removeItem('userInfo')
+    state.userInfo = {}
+    // sessionMemory.removeItem('accessToken')
+    // sessionMemory.removeItem('userInfo')
   },
   [GET_RANDOMCODE]: (state, data) => {
     state.validateCodeImg = data
   },
   [GET_USER_INFO]: (state, data) => {
+    console.log('data: ', data)
     state.userInfo = data
 
-    sessionMemory.setItem({
-      name: 'userInfo',
-      value: data
-    })
+    // sessionMemory.setItem({
+    //   name: 'userInfo',
+    //   value: data
+    // })
   }
 }
 

@@ -11,9 +11,6 @@ export default {
     return {
     }
   },
-  // asyncData ({ route, store }) {
-  //   return store.dispatch('user/getRandomCode')
-  // },]
   methods: {
   }
 }

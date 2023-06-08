@@ -1,0 +1,1 @@
+export const UPDATE_ARTICLE_CATEGORY_LIST = 'updateArticleCategoryList'

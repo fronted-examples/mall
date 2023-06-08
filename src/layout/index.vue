@@ -1,12 +1,16 @@
 <template>
   <el-container direction="vertical">
-    <nav-header :navList="navList"
-                :menuList="menuList"
-                :accessToken="accessToken"
-                :userInfo="userInfo" :href="href"
-                @navClick="handleNavClick"
-                @menuClick="handleMenuClick" />
-    <main-content />
+    <div class="header-box">
+      <nav-header :navList="navList"
+                  :menuList="menuList"
+                  :accessToken="accessToken"
+                  :userInfo="userInfo"
+                  :href="href"
+                  :headerVisible="headerVisible"
+                  @navClick="handleNavClick"
+                  @menuClick="handleMenuClick" />
+    </div>
+    <main-content ref="content" :href="href" />
   </el-container>
 </template>
 <script>
@@ -17,11 +21,18 @@ import { filterAsyncRoutes } from '@/utils/router'
 
 import NavHeader from './header'
 import MainContent from './content'
+
 export default {
   name: 'Layout',
   components: {
     NavHeader,
     MainContent
+  },
+  props: {
+    href: {
+      type: Object,
+      default: () => ({})
+    }
   },
   data () {
     return {
@@ -37,26 +48,30 @@ export default {
         label: '我的书架',
         routeName: 'bookshelf',
         icon: 'bookshelf'
-      }]
+      }],
+      headerVisible: true
     }
   },
   computed: {
     ...mapGetters('user', ['accessToken', 'userInfo']),
-    ...mapGetters('app', ['href']),
     navList () {
       return filterAsyncRoutes(constantRoutes)
     }
   },
-  watch: {
-    $route (to, from) {
-      this.updateHref(to.path)
-    }
+  mounted () {
+    // 给window添加一个滚动滚动监听事件
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed () {
+    // 离开该页面需要移除这个监听的事件
+    window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
     ...mapActions({
       updateHref: 'app/updateHref'
     }),
     handleNavClick (item) {
+      console.log('item: ', item)
       this.$router.push({
         path: item.path
       })
@@ -68,11 +83,32 @@ export default {
           id: 1
         }
       }).then(() => {
-        // this.popoverVisible = false
       }).catch((err) => {
-        // console.log('write err: ' + err)
       })
-    }
+    },
+    handleScroll (e) { //改变元素#searchBar的top值
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      // let offsetTop = document.querySelector('#searchBar').offsetTop
+
+
+      this.$nextTick(() => {
+        let top = this.$refs.content.$el.getBoundingClientRect().top
+
+
+        if (top - scrollTop <= 0) {
+          this.headerVisible = false
+        } else {
+          this.headerVisible = true
+        }
+      })
+    },
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.header-box {
+  position: relative;
+  height: 60px;
+}
+</style>

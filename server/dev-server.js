@@ -30,11 +30,8 @@ server.use('/dist', express.static('../dist'))
 const render = async (request, response) => {
   try {
     const context = {
-      // title: '',
       // entry-server.js用于设置服务器端router的位置
       url: request.url,
-      // keywords: '',
-      // description: '',
     }
     // renderToString支持promise
     const html = await renderer.renderToString(context)

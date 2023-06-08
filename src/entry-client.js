@@ -2,6 +2,8 @@
 import Vue from 'vue'
 import { createApp } from './app'
 
+import createPersistedstate from '@/utils/vuex-persistedstate'
+
 // 客户端特定引导逻辑……
 
 const { app, router, store } = createApp()
@@ -36,11 +38,10 @@ Vue.mixin({
 
 if (window.__INITIAL_STATE__) {
     // 将window.__INITIAL_STATE__的数据替换到客户端的store中
-    store.replaceState(window.__INITIAL_STATE__)
-    console.log('store: ', store)
+    console.log('state: ', store)
+    store.replaceState(Object.assign({}, window.__INITIAL_STATE__, store.state))
+    // store.replaceState(window.__INITIAL_STATE__)
 }
-
-// console.log('router: ', router)
 
 // 这里假定 App.vue 模板中根元素具有 `id="app"`
 router.onReady(() => {

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
-import { sessionMemory } from '@/utils/storage'
+// import { sessionMemory } from '@/utils/storage'
 
 import { createStore } from '@/store'
 
@@ -46,12 +46,11 @@ function retryAdapterEnhancer (adapter, options) {
     return request()
   }
 }
-// console.log('process.env.BASE_URL: ', process.env.BASE_URL)
 // create an axios instance
 const service = axios.create({
   // 如果不存在跨域问题并且在dev.env.xxx文件中有配置的话baseURL的值可以直接使用：process.env.BASE_URL；
   // 如果使用proxy做了代理配置，那么baseURL的值直接填写'/'就可以了。
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: process.env.VUE_ENV === 'client' ? process.env.VUE_APP_BASE_API : process.env.VUE_APP_SERVER_BASE_API, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 60000, // request timeout
   adapter: retryAdapterEnhancer(axios.defaults.adapter, {
@@ -65,12 +64,13 @@ service.defaults.withCredentials = true
 service.interceptors.request.use(
   config => {
     // do something before request is sent
+    const store = createStore()
 
-    if (sessionMemory.getItem('accessToken') && config.url.indexOf(process.env.IMAGE_PREFIX) === -1) {
+    if (store.getters['user/accessToken'] && config.url.indexOf(process.env.IMAGE_PREFIX) === -1) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['Authorization'] = 'Bearer ' + sessionMemory.getItem('accessToken')
+      config.headers['Authorization'] = 'Bearer ' + store.getters['user/accessToken']
     }
 
     return config
@@ -145,8 +145,8 @@ service.interceptors.response.use(
           type: 'warning'
         }).then(() => {
           // 退出登录
-          store.dispatch('user/clearUserInfoAndTokens').then(() => {
-            location.reload()
+          store.dispatch('user/logout').then(() => {
+            location.href = '/mall'
           })
         })
       } else {

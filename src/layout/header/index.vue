@@ -1,14 +1,20 @@
 <template>
   <el-header class="nav-header flex-row main-between"
-             v-if="headerVisible">
+             :class="[headerVisible ? 'visible' : '']">
     <section
              class="container flex-row main-between">
       <section
                class="left-box flex-row secondary-center">
+        <div
+             class="app-logo flex-row secondary-center">
+          <img :src="appLogo" />
+          <span>购物天堂</span>
+        </div>
+
         <span v-for="(item, index) of navList"
               :key="index"
               class="nav-item flex-inline main-center secondary-center"
-              :class="[href === item.path ? 'is-active' : '']"
+              :class="[href.parentRoutePath === item.path ? 'is-active' : '']"
               @click="toNav(item, index)">
           {{ item.meta.title }}
         </span>
@@ -67,9 +73,8 @@
 
     <el-dialog :visible.sync="loginVisible"
                title="登录享受更多权益"
-               :modal-append-to-body="false"
-               :close-on-click-modal="false"
-               width="20%">
+               modal-append-to-body append-to-body
+               :close-on-click-modal="false">
       <el-form class="login-form">
         <el-form-item>
           <el-input v-model="username"
@@ -97,11 +102,17 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+
+const LOGO = require('~/static/favicon.ico')
 
 export default {
   name: 'NavHeader',
   props: {
+    headerVisible: {
+      type: Boolean,
+      default: true
+    },
     accessToken: {
       type: String,
       required: true,
@@ -109,13 +120,12 @@ export default {
     },
     userInfo: {
       type: Object,
-      required: true,
       default: () => ({})
     },
     href: {
-      type: String,
+      type: Object,
       required: true,
-      default: ''
+      default: () => ({})
     },
     navList: {
       type: Array,
@@ -130,7 +140,6 @@ export default {
     return {
       loginVisible: false,
       popoverVisible: false,
-      headerVisible: true,
       username: '',
       password: '',
       validateCode: '',
@@ -138,15 +147,16 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('user', ['validateCodeImg']),
+    appLogo () {
+      return LOGO
+    },
     avatarUrl () {
       if (this.userInfo && this.userInfo.avatarUrl) {
         return this.userInfo.avatarUrl
       }
 
-      return `${process.env.IMAGE_PREFIX}/file/images/default_avatar.svg`
-    },
-    validateCodeImg () {
-      return this.$store.state.user.validateCodeImg
+      return `${process.env.IMAGE_PREFIX}/user-management/image/default_avatar.svg`
     }
   },
   methods: {
@@ -173,8 +183,9 @@ export default {
         validateCode: this.validateCode
       }
       this.userLogin(params).then(() => {
-        this.loading = false
         this.loginVisible = false
+      }).finally(() => {
+        this.loading = false
       })
     },
     logout () {
@@ -190,16 +201,22 @@ export default {
 <style lang="scss" scoped>
 .nav-header {
   width: 100%;
+  height: 100%;
   background: #fff;
   border-bottom: 1px solid #f1f1f1;
   color: #909090;
   z-index: 250;
 
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  transition: all 0.2s;
+  transition: transform 0.2s;
+  transform: translate3d(0, -100%, 0);
+
+  &.visible {
+    transform: translateZ(0);
+  }
 }
 .container {
   max-width: 1440px;
@@ -207,6 +224,27 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
+  .app-logo {
+    width: 132px;
+    height: 100%;
+    margin-right: 20px;
+    img {
+      width: 35px;
+      height: 35px;
+
+      &::after {
+        content: '购物天堂';
+      }
+    }
+
+    span {
+      font-size: 20px;
+      font-family: 隶书;
+      font-weight: 600;
+      color: #121212;
+      margin-left: 12px;
+    }
+  }
   .left-box {
     height: 100%;
     .nav-item {
@@ -312,6 +350,11 @@ export default {
   ::v-deep .el-dialog__body {
     padding-bottom: 20px;
   }
+
+  ::v-deep .el-dialog {
+    width: 384px;
+  }
+
   .el-dialog {
     .el-button {
       width: 100%;

@@ -4,7 +4,7 @@
  * @returns {function} storage
  * @author gzq
  */
-class Storage {
+export default class Storage {
   constructor(type) {
     let win = global.window || window
     if (type === 'localStorage') {
@@ -104,6 +104,7 @@ if (process.env.VUE_ENV === "server") {
 
 const localMemory = new Storage('localStorage')
 const sessionMemory = new Storage('sessionStorage')
+
 export {
   localMemory,
   sessionMemory

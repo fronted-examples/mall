@@ -35,3 +35,42 @@ export const getUserInfo = () => {
     method: 'get'
   })
 }
+
+export const getArticleCategoryList = () => {
+  return request({
+    url: '/articleCategory/getArticleCategoryList',
+    method: 'get'
+  })
+}
+
+export const addArticle = (data) => {
+  return request({
+    url: '/article/addArticle',
+    method: 'post',
+    data
+  })
+}
+
+export const getArticleByArticleId = (params) => {
+  return request({
+    url: '/article/getArticleByArticleId',
+    method: 'get',
+    params
+  })
+}
+
+export const editArticle = (data) => {
+  return request({
+    url: '/article/editArticle',
+    method: 'patch',
+    data
+  })
+}
+
+export const getArticleListByKeyword = (params) => {
+  return request({
+    url: '/article/getArticleListByKeyword',
+    method: 'get',
+    params
+  })
+}

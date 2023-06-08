@@ -1,5 +1,5 @@
 <template>
-  <section class="write">
+  <section class="editor">
     <div class="header flex-row main-between">
       <el-input class="title" clearable
                 placeholder="文章标题"
@@ -16,18 +16,71 @@
                     icon-class="switch"
                     @click="toggleEditor" />
         </el-popover>
-        <el-button type="primary"
-                   @click="publish">发
-          布</el-button>
+
+        <el-popover placement="top" width="560"
+                    :appendToBody="false"
+                    trigger="click" title="发布文章"
+                    v-model="popoverVisible">
+          <el-form label-position="left"
+                   ref="elForm"
+                   :model="formModel">
+            <el-form-item label="分类" required
+                          prop="categoryId"
+                          :rules="[
+                            { required: true, message: '请选择分类'}
+                          ]">
+              <div class="category-list">
+                <label class="radio"
+                       :class="[formModel.categoryId === articleCategory.categoryId ? 'selected' : '']"
+                       v-for="(articleCategory, index) of articleCategoryList"
+                       :key="index"
+                       @click="selectArticleCategory(articleCategory)">
+                  <span>{{ articleCategory.categoryName }}</span>
+                </label>
+              </div>
+            </el-form-item>
+
+            <el-form-item label="文章封面">
+              <upload @change="handleChange"
+                      :url="coverUrl">
+                上传封面
+              </upload>
+            </el-form-item>
+
+            <el-form-item label="编辑摘要" required
+                          prop="description"
+                          :rules="[
+                            { required: true, message: '请填写摘要'}
+                          ]">
+              <el-input type="textarea"
+                        resize="none"
+                        maxlength="100" :rows="5"
+                        show-word-limit
+                        v-model="formModel.description" />
+            </el-form-item>
+
+            <el-form-item class="form-footer">
+              <el-button
+                         @click="onCancel">取消</el-button>
+              <el-button type="primary"
+                         @click="onSubmit">确定并发布</el-button>
+            </el-form-item>
+          </el-form>
+          <el-button type="primary"
+                     slot="reference">发
+            布</el-button>
+        </el-popover>
       </div>
     </div>
 
     <section class="content">
-      <markdown-editor v-if="!richVisible"
+      <markdown-editor v-if="!type"
+                       @addImage="addImage"
                        v-model="markdownVal" />
 
-      <TinymceEditor v-if="richVisible"
+      <TinymceEditor v-else
                      :uploadImage="uploadImage"
+                     :uploadFile="uploadMedia"
                      v-model="richText" />
     </section>
   </section>
@@ -36,21 +89,41 @@
 <script>
 import MarkdownEditor from '@/components/MarkdownEditor'
 import TinymceEditor from '@/components/TinymceEditor'
+import Upload from '@/components/Upload'
+
+import { mapGetters } from 'vuex'
+
+import { Uploader } from '@/utils/simple-upload'
+
+import { addArticle, editArticle, getArticleByArticleId } from '@/apis'
+import { uploadSingleFile } from '@/apis/upload'
 
 export default {
   name: 'Editor',
   components: {
     MarkdownEditor,
-    TinymceEditor
+    TinymceEditor,
+    Upload
   },
   data () {
     return {
+      popoverVisible: false,
       title: '',
       switchTitle: '切换为富文本编辑器',
       markdownVal: '',
       richText: '',
-      richVisible: false
+      coverId: null,
+      coverUrl: '',
+      type: 0,
+      formModel: {
+        categoryId: null,
+        description: ''
+      }
     }
+  },
+  computed: {
+    ...mapGetters('user', ['userInfo']),
+    ...mapGetters('business', ['articleCategoryList'])
   },
   watch: {
     richVisible (newVal) {
@@ -61,35 +134,118 @@ export default {
     },
     richText (newVal) {
       console.log('richText: ', newVal)
-    }
+    },
+  },
+  asyncData ({ store }) {
+    return store.dispatch('business/updateArticleCategoryList')
   },
   created () {
-    this.richVisible = this.$route.query.richVisible
+    this.type = this.$route.query.type
   },
   methods: {
+    handleUploader (files, success, fail) {
+      this.uploader = new Uploader({
+        files: files,
+        language: 'EN',
+        beforeUpload: (uploader) => {
+          console.log('回调uploader', uploader)
+
+          for (let i = 0; i < uploader.fileList.length; i++) {
+            uploader.fileList[i].start()
+          }
+        },
+        uploading: (file) => {
+          console.log('回调uploading', file)
+        },
+        uploadSuccess: (file) => {
+          console.log('回调uploadSuccess', file)
+
+          success(`${process.env.IMAGE_PREFIX}${file.url}`)
+        },
+        uploadFailed: function (file) {
+          console.log('回调uploadFailed', file)
+        }
+      })
+    },
     toggleEditor () {
-      this.richVisible = !this.richVisible
+      this.type = !this.type ? 1 : 0
       this.$router.replace({
         path: this.$route.path,
         query: {
           ...this.$route.query,
-          richVisible: this.richVisible
+          type: this.type
         }
       })
     },
     save () { },
-    publish () { },
+    onCancel () {
+      this.popoverVisible = false
+    },
+    onSubmit () {
+      this.$refs.elForm.validate((validated) => {
+        if (validated) {
+          this.addArticle()
+        }
+      })
+    },
+    selectArticleCategory (articleCategory) {
+      this.formModel.categoryId = articleCategory.categoryId
+    },
+    addImage (filename, image) {
+      console.log(filename, image)
+    },
     uploadImage (file, success, fail) {
       console.log(file)
 
-      success(1)
+      this.handleUploader([file], success, fail)
+    },
+    uploadMedia (file, callback) {
+      this.handleUploader([file], callback)
+    },
+    handleChange (files) {
+      this.uploadSingleFile(files).then(({ file }) => {
+        this.coverUrl = file.fileUrl
+        this.coverId = file.id
+      })
+    },
+    uploadSingleFile (files) {
+      let formData = new FormData()
+      formData.append('file', files[0])
+
+      return new Promise((resolve, reject) => {
+        uploadSingleFile(formData, this.userInfo.userId).then(({ code, data }) => {
+          if (code === 200) {
+            resolve(data)
+          }
+        })
+      })
+    },
+    addArticle () {
+      const params = {
+        userId: this.userInfo.userId,
+        type: this.type,
+        title: this.title,
+        description: this.formModel.description,
+        content: this.type ? this.markdownVal : this.richText,
+        coverId: this.coverId,
+        categoryId: this.formModel.categoryId
+      }
+
+      return new Promise((resolve, reject) => {
+        addArticle(params).then(({ code }) => {
+          if (code === 200) {
+            resolve()
+          }
+        })
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.write {
+.editor {
+  background-color: #fff;
   height: 100vh;
   .header {
     padding-top: 10px;
@@ -119,6 +275,76 @@ export default {
 
   .content {
     height: calc(100vh - 60px);
+  }
+
+  .el-form {
+    border-top: 1px solid #e5e6eb;
+    padding-top: 20px;
+    .el-form-item {
+      display: flex;
+    }
+
+    ::v-deep .el-form-item__label {
+      width: 85px;
+      line-height: 28px;
+      text-align: right;
+    }
+
+    ::v-deep .el-form-item__content {
+      flex: auto;
+      line-height: 20px;
+    }
+
+    ::v-deep .el-form-item__error {
+      padding-top: 0;
+    }
+
+    ::v-deep .el-textarea__inner {
+      background-color: #fafafa;
+    }
+
+    ::v-deep .el-input__count {
+      bottom: 8px;
+      line-height: 1;
+      color: rgb(238, 77, 56);
+    }
+
+    .el-textarea {
+      margin-bottom: 10px;
+    }
+
+    .form-footer {
+      text-align: right;
+    }
+
+    .category-list {
+      height: 100%;
+      .radio {
+        display: inline-block;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        padding: 0 8px;
+        font-size: 14px;
+        line-height: 28px;
+        width: 88px;
+        height: 28px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-align: center;
+        text-overflow: ellipsis;
+        border-radius: 2px;
+        cursor: pointer;
+        color: #86909c;
+        background-color: #f4f5f5;
+        &:hover {
+          background-color: #e5e6eb;
+        }
+        &.selected {
+          color: #1d7dfa;
+          background-color: #e8f3ff;
+        }
+      }
+    }
   }
 }
 </style>

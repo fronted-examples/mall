@@ -62,8 +62,6 @@ export default {
     handleLink (item) {
       const { redirect, path } = item
 
-      console.log('redirect: ', redirect)
-
       if (redirect) {
         this.$store.dispatch('app/updateDefaultOpen', redirect)
 

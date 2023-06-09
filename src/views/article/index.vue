@@ -1,12 +1,12 @@
 <template>
   <section class="article">
-    <!-- <Markdown :content="content" /> -->
-    <markdown-preview :content="content" />
+    <markdown-preview v-if="article"
+                      :content="article.content" />
   </section>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import Markdown from '@/components/Markdown'
 import MarkdownPreview from '@/components/MarkdownPreview'
 
@@ -22,23 +22,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('business', ['article']),
-    content () {
-      if (this.article) {
-        return this.article.content
-      }
-
-      return ''
-    }
+    ...mapGetters('business', ['article'])
   },
   asyncData ({ store, route }) {
     const articleId = route.params.articleId
 
     return store.dispatch('business/getArticleByArticleId', articleId)
   },
-  created () {
-    console.log('article: ', this.article)
-  }
+  // created () {
+  //   console.log('article: ', this.article)
+  // }
 }
 </script>
 

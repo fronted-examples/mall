@@ -19,8 +19,14 @@ export default {
     }
   },
   watch: {
-    content (newVal) {
-      this.getMardownFileContent(newVal)
+    // 解决服务端渲染，数据已经获取到，但对应的dom没渲染的问题
+    content: {
+      handler (newVal) {
+        this.getMardownFileContent(newVal)
+
+        this.update()
+      },
+      immediate: true
     }
   },
   mounted () {
@@ -39,7 +45,7 @@ export default {
     },
     //获取对应markdown代码块标签
     update () {
-      setTimeout(() => {
+      this.$nextTick(() => {
         document.querySelectorAll('pre').forEach(el => {
           //   console.log(el)
           if (el.classList.contains('code-copy-added')) return
@@ -54,7 +60,7 @@ export default {
           el.classList.add('code-copy-added')
           el.appendChild(instance.$el)
         })
-      }, 100)
+      })
     }
   }
 }

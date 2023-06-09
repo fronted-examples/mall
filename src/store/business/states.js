@@ -1,5 +1,6 @@
 const states = {
-  articleCategoryList: []
+  articleCategoryList: [],
+  article: null
 }
 
 export default states

@@ -12,6 +12,8 @@ const Backend = resolve => require(['@/views/home/backend/index'], resolve)
 const Android = resolve => require(['@/views/home/android/index'], resolve)
 const IOS = resolve => require(['@/views/home/ios/index'], resolve)
 
+const Article = resolve => require(['@/views/article/index'], resolve)
+
 const Activity = resolve => require(['@/views/activity/index'], resolve)
 const Subjects = resolve => require(['@/views/subjects/index'], resolve)
 const Boiling = resolve => require(['@/views/boiling/index'], resolve)
@@ -192,6 +194,30 @@ export const constantRoutes = [
         keywords: '活动',
         description: '活动'
       },
+    }]
+  },
+  {
+    path: `${process.env.BASE_URL}/article`,
+    component: Layout,
+    redirect: `${process.env.BASE_URL}/article/:articleId`,
+    meta: {
+      title: '文章',
+      icon: 'user',
+      keywords: '文章',
+      description: '文章',
+      hidden: true
+    },
+    children: [{
+      path: `${process.env.BASE_URL}/article/:articleId`,
+      component: Article,
+      name: 'article',
+      meta: {
+        parentRoute: `${process.env.BASE_URL}/article`,
+        title: '文章',
+        icon: 'user',
+        keywords: '文章',
+        description: '文章'
+      }
     }]
   },
   {

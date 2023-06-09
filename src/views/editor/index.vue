@@ -63,6 +63,7 @@
               <el-button
                          @click="onCancel">取消</el-button>
               <el-button type="primary"
+                         :loading="loading"
                          @click="onSubmit">确定并发布</el-button>
             </el-form-item>
           </el-form>
@@ -74,11 +75,11 @@
     </div>
 
     <section class="content">
-      <markdown-editor v-if="!type"
+      <markdown-editor v-if="!editorType"
                        @addImage="addImage"
                        v-model="markdownVal" />
 
-      <TinymceEditor v-else
+      <TinymceEditor v-if="editorType"
                      :uploadImage="uploadImage"
                      :uploadFile="uploadMedia"
                      v-model="richText" />
@@ -107,6 +108,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       popoverVisible: false,
       title: '',
       switchTitle: '切换为富文本编辑器',
@@ -114,7 +116,7 @@ export default {
       richText: '',
       coverId: null,
       coverUrl: '',
-      type: 0,
+      editorType: 0,
       formModel: {
         categoryId: null,
         description: ''
@@ -126,7 +128,7 @@ export default {
     ...mapGetters('business', ['articleCategoryList'])
   },
   watch: {
-    richVisible (newVal) {
+    editorType (newVal) {
       this.switchTitle = newVal ? '切换为Markdown编辑器' : '切换为富文本编辑器'
     },
     markdownVal (newVal) {
@@ -140,7 +142,7 @@ export default {
     return store.dispatch('business/updateArticleCategoryList')
   },
   created () {
-    this.type = this.$route.query.type
+    this.editorType = isNaN(parseInt(this.$route.query.editorType)) ? 0 : parseInt(this.$route.query.editorType)
   },
   methods: {
     handleUploader (files, success, fail) {
@@ -168,12 +170,15 @@ export default {
       })
     },
     toggleEditor () {
-      this.type = !this.type ? 1 : 0
+      this.editorType = this.editorType === 0 ? 1 : 0
+
+      console.log('editorType: ', this.editorType)
+
       this.$router.replace({
         path: this.$route.path,
         query: {
           ...this.$route.query,
-          type: this.type
+          editorType: this.editorType
         }
       })
     },
@@ -184,15 +189,22 @@ export default {
     onSubmit () {
       this.$refs.elForm.validate((validated) => {
         if (validated) {
-          this.addArticle()
+          this.loading = true
+          this.addArticle().finally(() => {
+            this.loading = false
+            this.popoverVisible = false
+          })
         }
       })
     },
     selectArticleCategory (articleCategory) {
       this.formModel.categoryId = articleCategory.categoryId
     },
-    addImage (filename, image) {
+    addImage (filename, image, callback) {
       console.log(filename, image)
+      this.uploadSingleFile([image]).then(({ file }) => {
+        callback(filename, file)
+      })
     },
     uploadImage (file, success, fail) {
       console.log(file)
@@ -223,10 +235,10 @@ export default {
     addArticle () {
       const params = {
         userId: this.userInfo.userId,
-        type: this.type,
+        type: this.editorType,
         title: this.title,
         description: this.formModel.description,
-        content: this.type ? this.markdownVal : this.richText,
+        content: this.editorType === 0 ? this.markdownVal : this.richText,
         coverId: this.coverId,
         categoryId: this.formModel.categoryId
       }
@@ -236,6 +248,8 @@ export default {
           if (code === 200) {
             resolve()
           }
+        }).catch((err) => {
+          reject(err)
         })
       })
     }

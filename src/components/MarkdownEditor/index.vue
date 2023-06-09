@@ -1,5 +1,5 @@
 <template>
-  <mavon-editor class="markdown"
+  <mavon-editor class="markdown" ref="md"
                 :toolbars="toolbars"
                 :editable="editable"
                 :defaultOpen="defaultOpen"
@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     addImage (filename, image) {
-      this.$emit('addImage', filename, image)
+      this.$emit('addImage', filename, image, this.afterAddImage)
     },
     delImage (filename) {
       this.$emit('delImage', filename)
@@ -104,6 +104,10 @@ export default {
     },
     handleReadModel (status, val) {
       this.$emit('readModel', status, val)
+    },
+    // 将md源码中图片src替换为上传后的文件服务器地址
+    afterAddImage (filename, file) {
+      this.$refs.md.$img2Url(filename, `${process.env.IMAGE_PREFIX}${file.fileUrl}`)
     }
   }
 }

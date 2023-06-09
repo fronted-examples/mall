@@ -11,6 +11,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import 'mavon-editor/dist/css/index.css'
 
+import 'github-markdown-css/github-markdown.css'
+
 import '@/icons'
 import '@/styles/index.scss' // 全局scss样式
 

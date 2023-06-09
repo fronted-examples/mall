@@ -25,6 +25,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json', '.css'],
     alias: {
       public: resolve('public'),
+      vue: 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       '~/static': path.resolve(__dirname, '../static'),
     },
@@ -45,6 +46,13 @@ module.exports = {
             preserveWhitespace: false,
           },
         },
+      },
+      {
+        test: /\.md$/,
+        use: [
+          { loader: 'html-loader' },
+          { loader: 'markdown-loader', options: {} }
+        ]
       },
       {
         test: /\.(sc|c)ss$/,

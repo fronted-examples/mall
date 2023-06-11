@@ -43,13 +43,13 @@ function getVideoPosterInfo (videoInfo) {
 // 获取一个图片的平均饱和度
 function getImageSaturation (canvas) {
   const ctx = canvas.getContext('2d')
-  const uint8ClampedArray = ctx.getImageData(0, 0, canvas.width, canvas.height).data
-  console.log(uint8ClampedArray)
+  const uint8ClampedArray = ctx.getImageData(0, 0, canvas.width, canvas.height).dataUrl
   const rgbaList = binary2rgba(uint8ClampedArray)
   const hslList = rgbaList.map(item => {
     return rgb2hsl(item.r, item.g, item.b)
   })
   const avarageSaturation = hslList.reduce((total, curr) => total + curr.s, 0) / hslList.length
+
   return avarageSaturation
 }
 
@@ -147,15 +147,5 @@ export function getFileDataUrl (file, callback) {
     callback(dataUrl)
   }
 }
-// // 这里通过http-server将视频地址与js进行同源
-// const videoSrc = 'http://192.168.2.1:8081/trailer.mp4'
-// // 饱和度品质 0/10/30/50
-// const targetSaturation = 0
-// getBestPoster(videoSrc, targetSaturation).then(posterUrl => {
-//   const image = new Image()
-//   image.src = posterUrl
-//   document.body.append(image)
-// }).catch(error => {
-//   console.log(error)
-// })
+
 

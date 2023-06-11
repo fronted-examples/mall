@@ -1,38 +1,34 @@
 import {
-  LOGIN,
+  INIT_TOKEN,
   LOGOUT,
   GET_RANDOMCODE,
   GET_USER_INFO
 } from './constants'
 
 import { sessionMemory } from '@/utils/storage'
+import Cookies from 'js-cookie'
 
 const mutations = {
-  [LOGIN]: (state, data) => {
-    state.accessToken = data.accessToken
-
-    // sessionMemory.setItem({
-    //   name: 'accessToken',
-    //   value: data.accessToken
-    // })
+  [INIT_TOKEN]: (state, accessToken) => {
+    state.accessToken = accessToken
+    Cookies.set('accessToken', accessToken)
   },
   [LOGOUT]: (state) => {
     state.accessToken = ''
-    state.userInfo = {}
-    // sessionMemory.removeItem('accessToken')
-    // sessionMemory.removeItem('userInfo')
+    state.userInfo = null
+    Cookies.remove('accessToken')
+    sessionMemory.removeItem('userInfo')
   },
   [GET_RANDOMCODE]: (state, data) => {
     state.validateCodeImg = data
   },
   [GET_USER_INFO]: (state, data) => {
-    console.log('data: ', data)
     state.userInfo = data
 
-    // sessionMemory.setItem({
-    //   name: 'userInfo',
-    //   value: data
-    // })
+    sessionMemory.setItem({
+      name: 'userInfo',
+      value: data
+    })
   }
 }
 

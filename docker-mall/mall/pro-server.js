@@ -3,8 +3,9 @@
  */
 // 创建一个 express 的 server 实例
 const express = require('express')
-const server = express()
+const app = express()
 const fs = require('fs')
+const cookieParser = require('cookie-parser')
 const { createBundleRenderer } = require('vue-server-renderer')
 const { minify } = require('html-minifier')
 
@@ -21,24 +22,35 @@ renderer = createBundleRenderer(serverBundle, {
   clientManifest, // (可选) 客户端构建
 })
 
-// 开头的路径，需要与 output 中设置的 publicPath 保持一致
-server.use('/dist', express.static('./dist'))
+app.use(cookieParser())
 
-const render = async (req, res) => {
+// 开头的路径，需要与 output 中设置的 publicPath 保持一致
+app.use('/dist', express.static('./dist'))
+
+const render = async (request, response) => {
   try {
     // renderToString支持promise
-    const html = await renderer.renderToString({
-      // 在模板中使用外部数据(可选第二个参数)
-      title: '购物天堂',
-      meta: `<meta name="description" content="购物天堂">`,
+    const context = {
       // entry-server.js用于设置服务器端router的位置
-      url: req.url,
-    })
-    res.setHeader('Content-Type', 'text/html; charset=utf-8')
-    res.end(minify(html, { collapseWhitespace: true, minifyCSS: true }))
+      url: request.url,
+      cookies: request.cookies,
+      request: request
+    }
+
+    const html = await renderer.renderToString(context)
+
+    response.setHeader('Content-Type', 'text/html; charset=utf-8')
+    response.end(minify(html, { collapseWhitespace: true, minifyCSS: true }))
   } catch (error) {
-    console.log('err: ', error)
-    res.status(500).end('Internal Server Error')
+    console.log('server error: ', error)
+    // response.status(500).end('Internal Server Error')
+    if (error.response.status === 404 || error.response.status === 400) {
+      response.status(404).redirect('/mall/404')
+    }
+
+    if (error.response.status === 500) {
+      response.status(500).redirect('/mall/500')
+    }
   }
 }
 
@@ -47,11 +59,12 @@ const render = async (req, res) => {
  * 服务端路由设置为 *，意味着所有的路由都会进入这里,不然会导致刷新页面，获取不到页面的bug
  * 并且vue-router设置的404页面无法进入
  */
-server.get(
-  '/*',
-  render // 生产模式：使用构建好的包直接渲染
+app.get('/*', async (request, response) => {
+  render(request, response)
+}
+  // render // 生产模式：使用构建好的包直接渲染
 )
 
-server.listen(port, () => {
-  console.log('server running at port 3000')
+app.listen(port, () => {
+  console.log(`server running at port ${port}`)
 })

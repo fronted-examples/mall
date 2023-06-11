@@ -2,7 +2,7 @@
   <section class="home flex-row">
     <nav class="nav-list">
       <div class="nav-item"
-           :class="[href.currentRoutePath === nav.path ? 'is-active' : '']"
+           :class="[currentRoutePath === nav.path ? 'is-active' : '']"
            v-for="(nav, index) of navList"
            :key="index" @click="toNav(nav)">
         <svg-icon :icon-class="nav.icon" />
@@ -17,22 +17,24 @@
 </template>
 
 <script>
+import { sessionMemory } from '@/utils/storage'
+import { mapGetters } from 'vuex'
 import { homeChildren } from '@/router'
 
 export default {
   name: 'Home',
-  props: {
-    tdk: Object,
-    href: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   data () {
     return {
     }
   },
   computed: {
+    currentRoutePath () {
+      if (sessionMemory.getItem('currentRoutePath')) {
+        return sessionMemory.getItem('currentRoutePath')
+      }
+
+      return this.$store.state.app.currentRoutePath
+    },
     navList () {
       return homeChildren.map((child) => {
         return {
@@ -43,6 +45,9 @@ export default {
         }
       })
     }
+  },
+  mounted () {
+    console.log('currentRoutePath: ', this.currentRoutePath)
   },
   methods: {
     toNav (nav) {

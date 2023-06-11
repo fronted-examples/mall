@@ -1,25 +1,25 @@
 import {
   SET_POSTS,
   GET_POSTS,
-  UPDATE_HREF
+  UPDATE_CURRENT_ROUTE_PATH,
+  UPDATE_PARENT_ROUTE_PATH
 } from './constants'
-import axios from 'axios'
 
 import { getPosts } from '@/apis'
 
 const actions = {
   [SET_POSTS]: async (context) => {
-    getPosts().then((res) => {
-      console.log('res: ', res)
-    })
-    // const { data } = await axios.get('https://cnodejs.org/api/v1/topics')
-    // context.commit(SET_POSTS, data.data)
+    const { data } = await getPosts()
+    context.commit(SET_POSTS, data.data)
   },
   [GET_POSTS]: (context, data) => {
     context.commit(GET_POSTS)
   },
-  [UPDATE_HREF]: (context, data) => {
-    context.commit(UPDATE_HREF, data)
+  [UPDATE_PARENT_ROUTE_PATH]: (context, data) => {
+    context.commit(UPDATE_PARENT_ROUTE_PATH, data)
+  },
+  [UPDATE_CURRENT_ROUTE_PATH]: (context, data) => {
+    context.commit(UPDATE_CURRENT_ROUTE_PATH, data)
   }
 }
 

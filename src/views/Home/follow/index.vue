@@ -9,6 +9,9 @@ export default {
   name: 'Follow',
   data () {
     return {}
+  },
+  mounted () {
+    console.log('mounted: backend')
   }
 }
 </script>

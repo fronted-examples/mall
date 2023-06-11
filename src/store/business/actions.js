@@ -1,8 +1,9 @@
-import { async } from 'q'
 import {
   UPDATE_ARTICLE_CATEGORY_LIST,
   GET_ARTICLE_BY_ARTICLE_ID,
-  UPDATE_ARTICLE
+  UPDATE_ARTICLE,
+  UPDATE_META_INFO,
+  CLEAR_META_IFNO
 } from './constants'
 
 import { getArticleListByKeyword, getArticleCategoryList, getArticleByArticleId } from '@/apis'
@@ -26,13 +27,23 @@ const actions = {
     const params = {
       articleId: articleId
     }
+
     const { code, data } = await getArticleByArticleId(params)
     if (code === 200) {
+      context.commit(UPDATE_META_INFO, {
+        title: data.article.title,
+        keywords: data.article.keywords,
+        description: data.article.description
+      })
+
       context.commit(GET_ARTICLE_BY_ARTICLE_ID, data)
     }
   },
   [UPDATE_ARTICLE]: (context, data) => {
     context.commit(UPDATE_ARTICLE, data)
+  },
+  [CLEAR_META_IFNO]: (context) => {
+    context.commit(UPDATE_META_INFO)
   }
 }
 

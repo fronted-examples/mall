@@ -1,19 +1,33 @@
-import { userInfo } from 'os'
 import {
   LOGIN,
+  INIT_TOKEN,
   LOGOUT,
   GET_RANDOMCODE,
   GET_USER_INFO
 } from './constants'
 
+import { cookieParse } from '@/utils/auth'
+
 import { getRandomCode, login, logout, getUserInfo } from '@/apis/index'
 
 const actions = {
+  nuxtServerInit ({ commit, state }, { request }) {
+    let accessToken = null
+    if (request && request.headers && request.headers.cookie) {
+      const parsed = cookieParse(request.headers.cookie)
+      try {
+        accessToken = parsed.accessToken
+      } catch (err) {
+        // No valid cookie found
+      }
+      commit(INIT_TOKEN, accessToken)
+    }
+  },
   [LOGIN]: (context, data) => {
     return new Promise((resolve, reject) => {
-      login(data).then(({ code, data }) => {
+      login(data).then(({ code, data: { accessToken } }) => {
         if (code === 200) {
-          context.commit(LOGIN, data)
+          context.commit(INIT_TOKEN, accessToken)
 
           context.dispatch(GET_USER_INFO).then(() => {
             resolve()

@@ -172,8 +172,6 @@ export default {
     toggleEditor () {
       this.editorType = this.editorType === 0 ? 1 : 0
 
-      console.log('editorType: ', this.editorType)
-
       this.$router.replace({
         path: this.$route.path,
         query: {

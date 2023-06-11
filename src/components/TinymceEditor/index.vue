@@ -217,7 +217,6 @@ export default {
           let file = blobInfo.blob()
 
           if (Object.prototype.toString.call(blobInfo.blob()) === '[object Blob]') {
-            console.log('file: ', this.blobtoFile(file))
             file = this.blobtoFile(file)
           }
 

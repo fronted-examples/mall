@@ -75,7 +75,7 @@ export function getTimeId (len, radix) {
     const uuid = getuuid(len, radix)
     return `${time}${uuid}`
   } else {
-    console.log('请输入长度')
+    console.error('请输入长度')
   }
 }
 

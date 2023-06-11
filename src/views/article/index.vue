@@ -1,12 +1,14 @@
 <template>
   <section class="article">
-    <markdown-preview v-if="article"
-                      :content="article.content" />
+    <template v-if="article">
+      <markdown-preview
+                        :content="article.content" />
+    </template>
   </section>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Markdown from '@/components/Markdown'
 import MarkdownPreview from '@/components/MarkdownPreview'
 
@@ -18,7 +20,11 @@ export default {
   },
   data () {
     return {
-
+      tdk: {
+        title: '',
+        keywords: '',
+        description: ''
+      }
     }
   },
   computed: {
@@ -29,9 +35,16 @@ export default {
 
     return store.dispatch('business/getArticleByArticleId', articleId)
   },
-  // created () {
-  //   console.log('article: ', this.article)
-  // }
+  beforeRouteLeave (to, from, next) {
+    console.log('beforeRouteLeave')
+    this.clearMetaInfo()
+    next()
+  },
+  methods: {
+    ...mapActions({
+      clearMetaInfo: 'business/clearMetaInfo'
+    })
+  }
 }
 </script>
 

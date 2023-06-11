@@ -1,7 +1,9 @@
 import {
   UPDATE_ARTICLE_CATEGORY_LIST,
   GET_ARTICLE_BY_ARTICLE_ID,
-  UPDATE_ARTICLE
+  UPDATE_ARTICLE,
+  CLEAR_META_IFNO,
+  UPDATE_META_INFO
 } from './constants'
 
 const mutations = {
@@ -13,6 +15,12 @@ const mutations = {
   },
   [UPDATE_ARTICLE]: (state, data) => {
     state.article = data
+  },
+  [UPDATE_META_INFO]: (state, data) => {
+    state.cacheMetaInfo = data
+  },
+  [CLEAR_META_IFNO]: (state, data) => {
+    state.cacheMetaInfo = null
   }
 }
 

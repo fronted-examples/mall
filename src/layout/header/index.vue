@@ -10,11 +10,10 @@
           <img :src="appLogo" />
           <span>购物天堂</span>
         </div>
-
         <span v-for="(item, index) of navList"
               :key="index"
               class="nav-item flex-inline main-center secondary-center"
-              :class="[href.parentRoutePath === item.path ? 'is-active' : '']"
+              :class="[parentRoutePath === item.path ? 'is-active' : '']"
               @click="toNav(item, index)">
           {{ item.meta.title }}
         </span>
@@ -23,8 +22,8 @@
       <section
                class="right-box flex-row secondary-center">
         <svg-icon icon-class="notice" />
-        <el-button v-show="!accessToken"
-                   class="login-btn"
+        <el-button class="login-btn"
+                   :class="[accessToken ? 'hidden' : 'visible']"
                    type="primary" plain
                    size="medium"
                    @click="toLogin">登录 |
@@ -33,8 +32,7 @@
         <el-popover :appendToBody="false"
                     placement="bottom" width="242"
                     trigger="click"
-                    v-model="popoverVisible"
-                    v-show="accessToken">
+                    v-model="popoverVisible">
           <section class="user-info">
             <div
                  class="header flex-row secondary-center">
@@ -66,6 +64,7 @@
             </ul>
           </section>
           <img class="avatar" slot="reference"
+               :class="[accessToken ? 'visible' : 'hidden']"
                :src="avatarUrl" />
         </el-popover>
       </section>
@@ -103,6 +102,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { sessionMemory } from '@/utils/storage'
 
 const LOGO = require('~/static/favicon.ico')
 
@@ -113,18 +113,8 @@ export default {
       type: Boolean,
       default: true
     },
-    accessToken: {
-      type: String,
-      required: true,
-      default: ''
-    },
     userInfo: {
       type: Object,
-      default: () => ({})
-    },
-    href: {
-      type: Object,
-      required: true,
       default: () => ({})
     },
     navList: {
@@ -147,7 +137,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('user', ['validateCodeImg']),
+    ...mapGetters('user', ['validateCodeImg', 'accessToken']),
+    parentRoutePath () {
+      if (sessionMemory.getItem('parentRoutePath')) {
+        return sessionMemory.getItem('parentRoutePath')
+      }
+
+      return this.$store.state.app.parentRoutePath
+    },
     appLogo () {
       return LOGO
     },
@@ -158,6 +155,9 @@ export default {
 
       return `${process.env.IMAGE_PREFIX}/user-management/image/default_avatar.svg`
     }
+  },
+  mounted () {
+    console.log('parentRoutePath: ', this.parentRoutePath)
   },
   methods: {
     ...mapActions({
@@ -189,7 +189,9 @@ export default {
       })
     },
     logout () {
-      this.userLogout()
+      this.userLogout().then(() => {
+        this.popoverVisible = false
+      })
     },
     getValidateCode () {
       this.getRandomCode()
@@ -297,6 +299,14 @@ export default {
       border-radius: 50%;
       background: transparent;
       cursor: pointer;
+    }
+
+    .visible {
+      display: block;
+    }
+
+    .hidden {
+      display: none;
     }
 
     .user-info {

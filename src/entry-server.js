@@ -3,10 +3,15 @@ import { createApp } from './app'
 
 // 使用async/await改造上述代码
 export default async (context) => {
-  const { app, router, store } = createApp()
+  const { url, cookies } = context
+  const { app, router, store } = createApp(cookies && cookies.accessToken)
   const meta = app.$meta()
-  // 用于设置服务器端router的位置
-  router.push(context.url)
+
+  // 每次刷新页面的时候，都将cookie中的token初始化到store中。保持登录状态
+  store.dispatch('user/nuxtServerInit', context)
+
+  // 用于设置服务器端router的位置，这一步会发生路由跳转，如果在此之后去将cookie中的token初始化到store中，会导致axios的store获取不到
+  router.push(url)
   context.meta = meta
 
   // this的指向router

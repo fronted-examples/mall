@@ -9,6 +9,9 @@ export default {
   name: 'iOS',
   data () {
     return {}
+  },
+  mounted () {
+    console.log('mounted: ios')
   }
 }
 </script>

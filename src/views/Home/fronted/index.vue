@@ -9,6 +9,9 @@ export default {
   name: 'Fronted',
   data () {
     return {}
+  },
+  mounted () {
+    console.log('mounted: fronted')
   }
 }
 </script>

@@ -3,6 +3,7 @@ import { MessageBox, Message } from 'element-ui'
 // import { sessionMemory } from '@/utils/storage'
 
 import { createStore } from '@/store'
+import Cookies from 'js-cookie'
 
 /**
  * 控制请求重试
@@ -65,12 +66,13 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     const store = createStore()
+    const accessToken = store.getters['user/accessToken'] || Cookies.get('accessToken')
 
-    if (store.getters['user/accessToken'] && config.url.indexOf(process.env.IMAGE_PREFIX) === -1) {
+    if (accessToken && config.url.indexOf(process.env.IMAGE_PREFIX) === -1) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['Authorization'] = 'Bearer ' + store.getters['user/accessToken']
+      config.headers['Authorization'] = 'Bearer ' + accessToken
     }
 
     return config
@@ -98,8 +100,6 @@ service.interceptors.response.use(
     const res = response.data
     const config = response.config
 
-    console.log('config: ', config)
-
     // if the custom code is not 20000, it is judged as an error.
     if (config.responseType === 'blob') {
       // 下载请求，不抛错误
@@ -123,8 +123,6 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
-      console.log('res: ', res)
 
       return Promise.reject(new Error(res.message || 'Error'))
     }

@@ -5,12 +5,11 @@
                   :menuList="menuList"
                   :accessToken="accessToken"
                   :userInfo="userInfo"
-                  :href="href"
                   :headerVisible="headerVisible"
                   @navClick="handleNavClick"
                   @menuClick="handleMenuClick" />
     </div>
-    <main-content ref="content" :href="href" />
+    <main-content ref="content" />
   </el-container>
 </template>
 <script>
@@ -27,12 +26,6 @@ export default {
   components: {
     NavHeader,
     MainContent
-  },
-  props: {
-    href: {
-      type: Object,
-      default: () => ({})
-    }
   },
   data () {
     return {
@@ -67,11 +60,7 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    ...mapActions({
-      updateHref: 'app/updateHref'
-    }),
     handleNavClick (item) {
-      console.log('item: ', item)
       this.$router.push({
         path: item.path
       })

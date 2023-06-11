@@ -1,6 +1,7 @@
 const states = {
   articleCategoryList: [],
-  article: null
+  article: null,
+  cacheMetaInfo: null
 }
 
 export default states

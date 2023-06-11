@@ -16,6 +16,8 @@ import 'github-markdown-css/github-markdown.css'
 import '@/icons'
 import '@/styles/index.scss' // 全局scss样式
 
+import Cookies from 'js-cookie'
+
 import HeadMixin from '@/utils/head'
 
 if (process.env.VUE_ENV === 'client') {
@@ -30,19 +32,13 @@ Vue.use(VueMeta)
 Vue.use(ElementUI)
 Vue.mixin(HeadMixin)
 
-// 这块不要，否则会导致走asycData()渲染时，title为'- 购物天堂'
-// Vue.mixin({
-//   metaInfo: {
-//     // 混入选项 %s 为用户自定义数据
-//     titleTemplate: '%s - 购物天堂'
-//   }
-// })
+Vue.prototype.$cookies = Cookies
 
 // 需要返回一个应用程序工厂: 返回Vue实例和Router实例
-export function createApp (context) {
+export function createApp (cookie) {
   // 处理首屏，就要先处理路由跳转
-  const router = createRouter()
   const store = createStore()
+  const router = createRouter()
 
   // routerGuard(router, store)
 

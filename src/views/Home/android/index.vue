@@ -9,6 +9,9 @@ export default {
   name: 'Android',
   data () {
     return {}
+  },
+  mounted () {
+    console.log('mounted: android')
   }
 }
 </script>

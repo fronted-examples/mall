@@ -21,14 +21,23 @@ function createPersistedState (store, options) {
   const sessionStorage = new Storage(options.storage)
 
   if (process.env.VUE_ENV === 'client') {
-
     const sessionCache = {}
     options.keys.forEach(key => {
       const cachedState = sessionStorage.getItem(key)
       sessionCache[key] = cachedState
     })
 
-    store.replaceState(Object.assign({}, store.state, sessionCache))
+    let flag = true
+    for (let key in sessionCache) {
+      if (!sessionCache[key]) {
+        flag = false
+        break
+      }
+    }
+
+    if (flag) {
+      store.replaceState(Object.assign({}, store.state, sessionCache))
+    }
   }
 
   store.subscribe((mutation, state) => {

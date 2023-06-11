@@ -9,6 +9,9 @@ export default {
   name: 'Recommend',
   data () {
     return {}
+  },
+  mounted () {
+    console.log('mounted: recommend')
   }
 }
 </script>

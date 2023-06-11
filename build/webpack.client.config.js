@@ -25,9 +25,13 @@ const plugins = [
 
 if (isProd) {
     plugins.push(
-        // 开启 gzip 压缩 https://github.com/woai3c/node-blog/blob/master/doc/optimize.md
+        /**
+         * 开启 gzip 压缩 https://github.com/woai3c/node-blog/blob/master/doc/optimize.md
+         */
         new CompressionPlugin(),
-        // 该插件会根据模块的相对路径生成一个四位数的hash作为模块id, 用于生产环境。
+        /**
+         * 该插件会根据模块的相对路径生成一个四位数的hash作为模块id, 用于生产环境。
+         */
         new webpack.HashedModuleIdsPlugin(),
         new WebpackBar(),
     )
@@ -59,25 +63,7 @@ const config = {
                 }
             },
         }
-    },
-    // module: {
-    //     rules: [
-    //         {
-    //           test: /\.css$/,
-    //           use: [
-    //               {
-    //                   loader: MiniCssExtractPlugin.loader,
-    //                   options: {
-    //                       // 解决 export 'default' (imported as 'mod') was not found
-    //                       // 启用 CommonJS 语法
-    //                       esModule: false,
-    //                   },
-    //               },
-    //               'css-loader'
-    //           ]
-    //         }
-    //     ]
-    // },
+    }
 }
 
 if (isProd) {

@@ -1,18 +1,12 @@
 <template>
   <el-main class="main-content">
-    <router-view :href="href" />
+    <router-view />
   </el-main>
 </template>
 
 <script>
 export default {
-  name: 'MainContent',
-  props: {
-    href: {
-      type: Object,
-      default: () => ({})
-    }
-  }
+  name: 'MainContent'
 }
 </script>
 

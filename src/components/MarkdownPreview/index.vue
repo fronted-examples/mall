@@ -47,7 +47,6 @@ export default {
     update () {
       this.$nextTick(() => {
         document.querySelectorAll('pre').forEach(el => {
-          //   console.log(el)
           if (el.classList.contains('code-copy-added')) return
           //   https://cn.vuejs.org/v2/api/index.html#Vue-extend
           /* 使用基础 Vue 构造器，创建一个“子类”。参数是一个包含组件选项的对象 */

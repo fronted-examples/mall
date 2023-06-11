@@ -113,6 +113,12 @@ function getVideoPosterByFrame (videoSrc, targetTime) {
   })
 }
 
+/**
+ *
+ * @param {*} videoSrc
+ * @param {*} targetSaturation 饱和度品质 0/10/30/50
+ * @returns
+ */
 export async function getBestPoster (videoSrc, targetSaturation) {
   const videoInfo = await getVideoBasicInfo(videoSrc)
   const { duration } = videoInfo
@@ -126,14 +132,3 @@ export async function getBestPoster (videoSrc, targetSaturation) {
   }
 }
 
-// // 这里通过http-server将视频地址与js进行同源
-// const videoSrc = 'http://192.168.2.1:8081/trailer.mp4'
-// // 饱和度品质 0/10/30/50
-// const targetSaturation = 0
-// getBestPoster(videoSrc, targetSaturation).then(posterUrl => {
-//   const image = new Image()
-//   image.src = posterUrl
-//   document.body.append(image)
-// }).catch(error => {
-//   console.log(error)
-// })

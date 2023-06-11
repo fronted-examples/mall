@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 // webpack中配置@指向src
 import Layout from '@/layout/index'
+import { async } from 'q'
 
 const Home = resolve => require(['@/views/home/index'], resolve)
 const Follow = resolve => require(['@/views/home/follow/index'], resolve)
@@ -20,8 +21,9 @@ const Boiling = resolve => require(['@/views/boiling/index'], resolve)
 
 const Editor = resolve => require(['@/views/editor/index'], resolve)
 
-const NotFound = resolve => require(['@/views/not-found/index'], resolve)
-const Forbidden = resolve => require(['@/views/forbidden/index'], resolve)
+const NotFound = resolve => require(['@/views/error-page/404'], resolve)
+const Forbidden = resolve => require(['@/views/error-page/403'], resolve)
+const ServerError = resolve => require(['@/views/error-page/500'], resolve)
 
 Vue.use(Router)
 
@@ -114,7 +116,7 @@ export const constantRoutes = [
     },
     children: [{
       path: `${process.env.BASE_URL}/`,
-      name: `${process.env.BASE_URL}/`,
+      name: 'home',
       component: Home,
       redirect: `${process.env.BASE_URL}/recommended`,
       meta: {
@@ -201,10 +203,6 @@ export const constantRoutes = [
     component: Layout,
     redirect: `${process.env.BASE_URL}/article/:articleId`,
     meta: {
-      title: '文章',
-      icon: 'user',
-      keywords: '文章',
-      description: '文章',
       hidden: true
     },
     children: [{
@@ -213,7 +211,7 @@ export const constantRoutes = [
       name: 'article',
       meta: {
         parentRoute: `${process.env.BASE_URL}/article`,
-        title: '文章',
+        title: '文章1',
         icon: 'user',
         keywords: '文章',
         description: '文章'
@@ -240,7 +238,25 @@ export const constantRoutes = [
     }
   },
   {
-    path: `${process.env.BASE_URL}/*`,
+    path: `${process.env.BASE_URL}/403`,
+    component: Forbidden,
+    meta: {
+      title: '403',
+      icon: 'user',
+      hidden: true
+    }
+  },
+  {
+    path: `${process.env.BASE_URL}/500`,
+    component: ServerError,
+    meta: {
+      title: '500',
+      icon: 'user',
+      hidden: true
+    }
+  },
+  {
+    path: `${process.env.BASE_URL}/:catchAll(.*)*`,
     component: NotFound,
     meta: {
       title: '404',
@@ -250,7 +266,7 @@ export const constantRoutes = [
   }
 ]
 
-export function createRouter () {
+export function createRouter (store) {
   return new Router({
     // 同构应用不能使用 hash 路由，应该使用 history 模式，兼容前后端
     mode: 'history',

@@ -6,8 +6,6 @@ const WebpackBar = require('webpackbar')
 
 const { merge } = require('webpack-merge')
 
-const isProd = process.env.NODE_ENV === 'production'
-
 const plugins = [
     new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
@@ -33,16 +31,5 @@ module.exports = merge(base, {
     externals: nodeExternals({
         allowlist: /\.css$/ // 防止将某些 import 的包(package)打包到 bundle 中，而是在运行时(runtime)再去从外部获取这些扩展依赖
     }),
-    plugins,
-    // module: {
-    //     rules: [
-    //         {
-    //             test: /\.css$/,
-    //             use: [
-    //                 'vue-style-loader',
-    //                 'css-loader'
-    //             ]
-    //         }
-    //     ]
-    // },
+    plugins
 })

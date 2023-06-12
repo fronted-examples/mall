@@ -74,3 +74,11 @@ export const getArticleListByKeyword = (params) => {
     params
   })
 }
+
+export const getArticleListByCategoryId = (params) => {
+  return request({
+    url: '/article/getArticleListByCategoryId',
+    method: 'get',
+    params
+  })
+}

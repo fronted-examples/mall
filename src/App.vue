@@ -37,6 +37,8 @@ export default {
   created () {
     this.initTdk(this.$route)
     this.initPath(this.$route)
+
+    this.initLog()
   },
   watch: {
     /**
@@ -73,6 +75,9 @@ export default {
       this.updateCurrentRoutePath(route.path)
       this.updateParentRoutePath(route.meta.parentRoute)
     },
+    initLog () {
+      console.log('%c 购物天堂! ', 'color:#1e80ff;font-size:20px;background:#fff;padding:8px;')
+    }
   }
 };
 </script>

@@ -9,11 +9,12 @@
                   @navClick="handleNavClick"
                   @menuClick="handleMenuClick" />
     </div>
-    <main-content ref="content" />
+    <main-content ref="content"
+                  :headerVisible="headerVisible" />
   </el-container>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import { constantRoutes } from '@/router'
 import { filterAsyncRoutes } from '@/utils/router'
@@ -77,8 +78,6 @@ export default {
     },
     handleScroll (e) { //改变元素#searchBar的top值
       let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      // let offsetTop = document.querySelector('#searchBar').offsetTop
-
 
       this.$nextTick(() => {
         let top = this.$refs.content.$el.getBoundingClientRect().top

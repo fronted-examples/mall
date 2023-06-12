@@ -1,28 +1,38 @@
 <template>
   <section class="home flex-row">
-    <nav class="nav-list">
-      <div class="nav-item"
-           :class="[currentRoutePath === nav.path ? 'is-active' : '']"
-           v-for="(nav, index) of navList"
-           :key="index" @click="toNav(nav)">
-        <svg-icon :icon-class="nav.icon" />
-        <span>{{ nav.label }}</span>
-      </div>
-    </nav>
+    <div class="index-nav"
+         :class="[headerVisible ? '' : 'index-nav-top']">
+      <nav class="nav-list">
+        <div class="nav-item"
+             :class="[currentRoutePath === nav.path ? 'is-active' : '']"
+             v-for="(nav, index) of navList"
+             :key="index" @click="toNav(nav)">
+          <svg-icon :icon-class="nav.icon" />
+          <span>{{ nav.label }}</span>
+        </div>
+      </nav>
+    </div>
 
-    <section class="content">
-      <router-view />
-    </section>
+    <client-only>
+      <section class="content">
+        <router-view />
+      </section>
+    </client-only>
   </section>
 </template>
 
 <script>
 import { sessionMemory } from '@/utils/storage'
-import { mapGetters } from 'vuex'
 import { homeChildren } from '@/router'
 
 export default {
   name: 'Home',
+  props: {
+    headerVisible: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
     }
@@ -61,20 +71,28 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  .nav-list {
+  margin-top: 20px;
+  .index-nav {
     width: 180px;
+    position: sticky; /* 父级元素或祖先元素的overflow除overflow:visible以外其他属性，都会使sticky失效 */
+    top: 80px;
+    margin-right: 20px;
     height: fit-content;
+    border-radius: 4px;
+    background-color: #fff;
     max-height: calc(100vh - 101px);
+    overflow-x: hidden;
+  }
+  .index-nav-top {
+    top: 20px;
+    max-height: calc(100vh - 40px);
+  }
+  .nav-list {
+    min-width: 180px;
+    box-sizing: border-box;
+    padding: 8px;
     font-size: 16px;
     color: #515767;
-    background-color: #fff;
-    border-radius: 4px;
-    overflow-x: hidden;
-    padding: 8px;
-    margin-right: 20px;
-
-    position: sticky;
-    top: 80px;
     .nav-item {
       height: 25px;
       line-height: 25px;
@@ -93,6 +111,9 @@ export default {
         margin-right: 10px;
       }
     }
+  }
+  .content {
+    width: calc(100% - 200px);
   }
 }
 </style>

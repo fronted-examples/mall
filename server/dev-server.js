@@ -47,7 +47,7 @@ const render = async (request, response) => {
   } catch (error) {
     console.log('server error: ', error.response.status)
     if (error.response.status === 404 || error.response.status === 400) {
-      response.status(404).redirect('/mall/404')
+      response.status(404).redirect('/mall/404?message=' + error.response.data.message)
     }
 
     if (error.response.status === 500) {

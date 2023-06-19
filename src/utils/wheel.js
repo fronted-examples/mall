@@ -1,32 +1,41 @@
-export function wheelDirection ($event) {
+export function getWheelData ($event) {
   $event = $event || window.event
 
   /**
    * 判断浏览器IE，谷歌滑轮事件
+   * wheelDelta > 0 -> 滑轮向上滚动
+   * wheelDelta < 0 -> 滑轮向下滚动
    */
   const wheelDelta = $event.wheelDelta
-  if (wheelDelta) {
-    if (wheelDelta > 0) { // 当滑轮向上滚动时
-      alert("滑轮向上滚动")
-    }
 
-    if (wheelDelta < 0) { // 当滑轮向下滚动时
-      alert("滑轮向下滚动")
-    }
+  const result = {}
+  if (wheelDelta) {
+    result['wheelDelta'] = wheelDelta
   }
 
   /**
    * Firefox滑轮事件
+   * detail > 0 -> 滑轮向下滚动
+   * detail < 0 -> 滑轮向上滚动
    */
   const detail = $event.detail
   if (!wheelDelta && detail) {
-    if (detail > 0) { // 当滑轮向下滚动时
-      alert("滑轮向下滚动")
-    }
+    result['detail'] = detail
+  }
 
-    if (detail < 0) { // 当滑轮向上滚动时
-      alert("滑轮向上滚动")
-    }
+  return result
+}
+
+/**
+ *
+ * @param {*} $event
+ * @param {*} callback
+ */
+export function getWheelDirection ($event, callback) {
+  const result = getWheelData($event)
+
+  if (Object.prototype.toString.call(callback) === '[object Function]') {
+    callback(result)
   }
 }
 

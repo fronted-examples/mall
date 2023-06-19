@@ -52,6 +52,7 @@
 <script>
 import { getArticleListByCategoryId } from '@/apis'
 import { reachBottom } from '@/utils/dom.js'
+import { uniqueArray } from '@/utils/utils.js'
 
 export default {
   name: 'Recommend',
@@ -87,7 +88,7 @@ export default {
   methods: {
     initData () {
       this.getArticleListByCategoryId().then(({ articleList, pageInfo }) => {
-        this.articleList = [...this.articleList, ...articleList]
+        this.articleList = uniqueArray([...this.articleList, ...articleList], 'articleId')
 
         this.pageInfo.pageIndex = pageInfo.pageIndex
         this.pageInfo.pageSize = pageInfo.pageSize

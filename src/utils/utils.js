@@ -158,3 +158,21 @@ export const getVideoBase64 = (url, scale = 0.8) => {
   })
 }
 
+export function uniqueArray (array, property) {
+  const result = []
+  const obj = {}
+
+  for (let i = 0; i < array.length; i++) {
+    /**
+     * 判断对象里是否有property值
+     * 如果没有property值把这一项扔进新的数组！
+     */
+    if (!obj[array[i][property]]) {
+      result.push(array[i])
+      // 扔进新数组后让这个对象保存property值
+      obj[array[i][property]] = true
+    }
+  }
+
+  return result
+}

@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
+const ExtractCssChunksPlugin = require('extract-css-chunks-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
@@ -65,19 +66,31 @@ module.exports = {
       {
         test: /\.(sc|c)ss$/,
         use: [
-          // fallback to style-loader in development
-          isProd !== 'production' ? 'vue-style-loader' : {
-            loader: MiniCssExtractPlugin.loader,
+          {
+            loader: ExtractCssChunksPlugin.loader,
             options: {
-              // 解决 export 'default' (imported as 'mod') was not found
-              // 启用 CommonJS 语法
-              esModule: false,
-            },
+              hot: !isProd,
+              reloadAll: !isProd
+            }
           },
-          "css-loader",
-          "postcss-loader",
-          "sass-loader"
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
         ]
+        // use: [
+        //   // fallback to style-loader in development
+        //   isProd !== 'production' ? 'vue-style-loader' : {
+        //     loader: MiniCssExtractPlugin.loader,
+        //     options: {
+        //       // 解决 export 'default' (imported as 'mod') was not found
+        //       // 启用 CommonJS 语法
+        //       esModule: false,
+        //     },
+        //   },
+        //   "css-loader",
+        //   "postcss-loader",
+        //   "sass-loader"
+        // ]
       },
       {
         test: /\.js$/,
@@ -131,6 +144,10 @@ module.exports = {
       to: 'static',
       ignore: ['.*']
     }]),
+    new ExtractCssChunksPlugin({
+      filename: '[name].[contenthash:8].css',
+      chunkFilename: '[name].[contenthash:8].[chunkhash:7].css'
+    }),
     new VueLoaderPlugin(),
     new FriendlyErrorsWebpackPlugin()
   ],

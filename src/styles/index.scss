@@ -94,8 +94,8 @@ img:not([src]) {
 /* 在全局CSS里引用: */
 /* 滚动条宽度 */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 10px;
+  width: 4px; // width是y轴滚动条的宽度
+  height: 4px; // height是x轴滚动条的高度
 }
 
 /* 滚动条的滑块 */

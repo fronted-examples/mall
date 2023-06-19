@@ -45,7 +45,7 @@ const render = async (request, response) => {
     console.log('server error: ', error)
     // response.status(500).end('Internal Server Error')
     if (error.response.status === 404 || error.response.status === 400) {
-      response.status(404).redirect('/mall/404')
+      response.status(404).redirect('/mall/404?message=' + error.response.message)
     }
 
     if (error.response.status === 500) {

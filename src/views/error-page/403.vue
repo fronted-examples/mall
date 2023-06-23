@@ -29,7 +29,7 @@
       </el-col>
     </el-row>
     <el-dialog :visible.sync="dialogVisible" title="随便看">
-      <img :src="ewizardClap" class="pan-img">
+      <img :src="ewizardClap" class="pan-img" alt="看图">
     </el-dialog>
   </div>
 </template>

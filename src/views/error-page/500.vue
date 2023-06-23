@@ -12,7 +12,7 @@
         </div>
         <div class="ri">
           <img src="@/assets/500_images/500.png"
-               alt="" />
+               alt="500" />
         </div>
         <div class="cl"></div>
       </div>

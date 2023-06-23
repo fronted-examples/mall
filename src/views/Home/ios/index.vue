@@ -41,7 +41,7 @@
             </ul>
           </div>
 
-          <img loading="lazy" class="thumb"
+          <img loading="lazy" class="thumb" alt="封面"
                :src="`${image_prefix}${article.cover}`" />
         </div>
       </li>

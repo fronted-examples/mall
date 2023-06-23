@@ -12,7 +12,8 @@
     </label>
     <div class="preview-content" v-else>
       <img class="preview-image"
-           :src="`${prefix}${imgUrl}`" />
+           :src="`${prefix}${imgUrl}`"
+           alt="上传图片" />
       <svg-icon icon-class="delete-fill"
                 @click="onDelete" />
     </div>

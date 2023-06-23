@@ -13,11 +13,11 @@ function resolve (dir) {
 
 module.exports = {
   mode: isProd ? 'production' : 'development',
-  context: path.resolve(__dirname, '../'),
+  context: resolve('/'),
   devtool: isProd ? 'source-map' : '#cheap-module-source-map',
   output: {
-    path: path.resolve(__dirname, '../dist'),
-    publicPath: '/dist/',
+    path: resolve('dist'),
+    publicPath: '/',
     /**
      * chunkhash 同属一个 chunk 中的文件修改了，文件名会发生变化
      * contenthash 只有文件自己的内容变化了，文件名才会变化
@@ -143,12 +143,19 @@ module.exports = {
       from: path.resolve(__dirname, '../static'),
       to: 'static',
       ignore: ['.*']
+    }, {
+      from: path.resolve(__dirname, '../static/robots.txt'),//防爬虫文件
+      to:'./',//到根目录下
     }]),
     new ExtractCssChunksPlugin({
       filename: '[name].[contenthash:8].css',
       chunkFilename: '[name].[contenthash:8].[chunkhash:7].css'
     }),
     new VueLoaderPlugin(),
-    new FriendlyErrorsWebpackPlugin()
+    new FriendlyErrorsWebpackPlugin({
+      compilationSuccessInfo: {
+        messages: [`Your application is running here: http://localhost:3000/mall`],
+      },
+    })
   ],
 }

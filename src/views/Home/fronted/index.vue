@@ -42,7 +42,8 @@
           </div>
 
           <img loading="lazy" class="thumb"
-               :src="`${image_prefix}${article.cover}`" />
+              alt="封面"
+              :src="`${image_prefix}${article.cover}`" />
         </div>
       </li>
     </ul>

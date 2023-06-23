@@ -7,7 +7,7 @@
                class="left-box flex-row secondary-center">
         <div
              class="app-logo flex-row secondary-center">
-          <img :src="appLogo" />
+          <img :src="appLogo" alt="appLog" />
           <span>购物天堂</span>
         </div>
         <span v-for="(item, index) of navList"
@@ -37,7 +37,8 @@
             <div
                  class="header flex-row secondary-center">
               <img class="avatar" slot="reference"
-                   :src="avatarUrl" />
+                   :src="avatarUrl"
+                   alt="昵称" />
               <span class="nickname">昵称</span>
             </div>
 
@@ -65,7 +66,8 @@
           </section>
           <img class="avatar" slot="reference"
                :class="[accessToken ? 'visible' : 'hidden']"
-               :src="avatarUrl" />
+               :src="avatarUrl"
+               alt="头像" />
         </el-popover>
       </section>
     </section>
@@ -89,6 +91,7 @@
                     placeholder="验证码" />
           <img class="validate-img"
                :src="validateCodeImg"
+               alt="验证码"
                @click="getValidateCode" />
         </el-form>
       </el-form>

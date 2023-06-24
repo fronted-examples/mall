@@ -5,8 +5,8 @@ import {
   GET_USER_INFO
 } from './constants'
 
-import { sessionMemory } from '@/utils/storage'
 import Cookies from 'js-cookie'
+import Storage from '@/utils/storage'
 
 const mutations = {
   [INIT_TOKEN]: (state, accessToken) => {
@@ -17,7 +17,11 @@ const mutations = {
     state.accessToken = ''
     state.userInfo = null
     Cookies.remove('accessToken')
-    sessionMemory.removeItem('userInfo')
+
+    if (process.env.VUE_ENV === 'client') {
+      const sessionStorage = new Storage('sessionStorage')
+      sessionStorage.removeItem('userInfo')
+    }
   },
   [GET_RANDOMCODE]: (state, data) => {
     state.validateCodeImg = data
@@ -25,10 +29,13 @@ const mutations = {
   [GET_USER_INFO]: (state, data) => {
     state.userInfo = data
 
-    sessionMemory.setItem({
-      name: 'userInfo',
-      value: data
-    })
+    if (process.env.VUE_ENV === 'client') {
+      const sessionStorage = new Storage('sessionStorage')
+      sessionStorage.setItem({
+        name: 'userInfo',
+        value: data
+      })
+    }
   }
 }
 

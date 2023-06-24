@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 const { VueLoaderPlugin } = require('vue-loader')
-const ExtractCssChunksPlugin = require('extract-css-chunks-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
@@ -17,7 +16,7 @@ module.exports = {
   devtool: isProd ? 'source-map' : '#cheap-module-source-map',
   output: {
     path: resolve('dist'),
-    publicPath: '/',
+    publicPath: '/dist/',
     /**
      * chunkhash 同属一个 chunk 中的文件修改了，文件名会发生变化
      * contenthash 只有文件自己的内容变化了，文件名才会变化
@@ -62,35 +61,6 @@ module.exports = {
           { loader: 'html-loader' },
           { loader: 'markdown-loader', options: {} }
         ]
-      },
-      {
-        test: /\.(sc|c)ss$/,
-        use: [
-          {
-            loader: ExtractCssChunksPlugin.loader,
-            options: {
-              hot: !isProd,
-              reloadAll: !isProd
-            }
-          },
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
-        ]
-        // use: [
-        //   // fallback to style-loader in development
-        //   isProd !== 'production' ? 'vue-style-loader' : {
-        //     loader: MiniCssExtractPlugin.loader,
-        //     options: {
-        //       // 解决 export 'default' (imported as 'mod') was not found
-        //       // 启用 CommonJS 语法
-        //       esModule: false,
-        //     },
-        //   },
-        //   "css-loader",
-        //   "postcss-loader",
-        //   "sass-loader"
-        // ]
       },
       {
         test: /\.js$/,
@@ -147,10 +117,6 @@ module.exports = {
       from: path.resolve(__dirname, '../static/robots.txt'),//防爬虫文件
       to:'./',//到根目录下
     }]),
-    new ExtractCssChunksPlugin({
-      filename: '[name].[contenthash:8].css',
-      chunkFilename: '[name].[contenthash:8].[chunkhash:7].css'
-    }),
     new VueLoaderPlugin(),
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {

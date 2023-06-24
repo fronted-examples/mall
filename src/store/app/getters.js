@@ -1,5 +1,3 @@
-import { sessionMemory } from '@/utils/storage'
-
 const getters = {
   posts: (state) => state.posts,
   currentRoutePath: (state) => state.currentRoutePath,

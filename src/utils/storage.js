@@ -6,11 +6,10 @@
  */
 export default class Storage {
   constructor(type) {
-    let win = global.window || window
     if (type === 'localStorage') {
-      this.memory = win.localStorage
+      this.memory = window.localStorage
     } else {
-      this.memory = win.sessionStorage
+      this.memory = window.sessionStorage
     }
   }
   /**
@@ -93,19 +92,4 @@ export default class Storage {
   clear () {
     this.memory.clear()
   }
-}
-
-// 存储服务端vuex前，将window对象绑定到global上
-if (process.env.VUE_ENV === "server") {
-  require('@/utils/server-add-window.js')
-  require('@/utils/flexible')
-}
-
-
-const localMemory = new Storage('localStorage')
-const sessionMemory = new Storage('sessionStorage')
-
-export {
-  localMemory,
-  sessionMemory
 }

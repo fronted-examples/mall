@@ -4,7 +4,8 @@ import {
   UPDATE_CURRENT_ROUTE_PATH,
   UPDATE_PARENT_ROUTE_PATH
 } from './constants'
-import { sessionMemory } from '@/utils/storage'
+
+import Storage from '@/utils/storage'
 
 const mutations = {
   [GET_POSTS]: (state, data) => {
@@ -16,18 +17,24 @@ const mutations = {
   [UPDATE_CURRENT_ROUTE_PATH]: (state, data) => {
     state.currentRoutePath = data
 
-    sessionMemory.setItem({
-      name: 'currentRoutePath',
-      value: data
-    })
+    if (process.env.VUE_ENV === 'client') {
+      const sessionStorage = new Storage('sessionStorage')
+      sessionStorage.setItem({
+        name: 'currentRoutePath',
+        value: data
+      })
+    }
   },
   [UPDATE_PARENT_ROUTE_PATH]: (state, data) => {
     state.parentRoutePath = data
 
-    sessionMemory.setItem({
-      name: 'parentRoutePath',
-      value: data
-    })
+    if (process.env.VUE_ENV === 'client') {
+      const sessionStorage = new Storage('sessionStorage')
+      sessionStorage.setItem({
+        name: 'parentRoutePath',
+        value: data
+      })
+    }
   }
 }
 

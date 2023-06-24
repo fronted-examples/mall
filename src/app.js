@@ -10,6 +10,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import ClientOnly from 'vue-client-only'
+import Storage from "@/utils/storage"
 
 import 'mavon-editor/dist/css/index.css'
 
@@ -20,6 +21,8 @@ import '@/styles/index.scss' // 全局scss样式
 
 if (process.env.VUE_ENV === 'client') {
   require('reset-css')
+
+  Vue.prototype.$sessionStorage = new Storage('sessionStorage')
 
   const mavonEditor = require('mavon-editor')
   Vue.use(mavonEditor)

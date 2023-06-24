@@ -31,5 +31,15 @@ module.exports = merge(base, {
     externals: nodeExternals({
         allowlist: /\.css$/ // 防止将某些 import 的包(package)打包到 bundle 中，而是在运行时(runtime)再去从外部获取这些扩展依赖
     }),
+    module: {
+        rules: [{
+            test: /\.(sc|c)ss$/,
+            use: [
+            //   'vue-style-loader', // vue-style-loader将css以<style>标签的形式注入到页面中，注释掉，则服务端不注入css
+              'css-loader',
+              'sass-loader',
+            ],
+          }]
+    },
     plugins
 })

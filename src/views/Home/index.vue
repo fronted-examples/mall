@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { sessionMemory } from '@/utils/storage'
 import { homeChildren } from '@/router'
 
 export default {
@@ -39,11 +38,13 @@ export default {
   },
   computed: {
     currentRoutePath () {
-      if (sessionMemory.getItem('currentRoutePath')) {
-        return sessionMemory.getItem('currentRoutePath')
-      }
+      if (process.env.VUE_ENV === 'client') {
+        if (this.$sessionStorage.getItem('currentRoutePath')) {
+          return this.$sessionStorage.getItem('currentRoutePath')
+        }
 
-      return this.$store.state.app.currentRoutePath
+        return this.$store.state.app.currentRoutePath
+      }
     },
     navList () {
       return homeChildren.map((child) => {

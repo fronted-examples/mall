@@ -23,7 +23,7 @@
                class="right-box flex-row secondary-center">
         <svg-icon icon-class="notice" />
         <el-button class="login-btn"
-                   :class="[accessToken ? 'hidden' : 'visible']"
+                   v-if="!accessToken"
                    type="primary" plain
                    size="medium"
                    @click="toLogin">登录 |
@@ -65,7 +65,7 @@
             </ul>
           </section>
           <img class="avatar" slot="reference"
-               :class="[accessToken ? 'visible' : 'hidden']"
+               v-if="accessToken"
                :src="avatarUrl"
                alt="头像" />
         </el-popover>
@@ -105,7 +105,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { sessionMemory } from '@/utils/storage'
 
 const LOGO = require('~/static/favicon.ico')
 
@@ -142,11 +141,13 @@ export default {
   computed: {
     ...mapGetters('user', ['validateCodeImg', 'accessToken']),
     parentRoutePath () {
-      if (sessionMemory.getItem('parentRoutePath')) {
-        return sessionMemory.getItem('parentRoutePath')
-      }
+      if (process.env.VUE_ENV === 'client') {
+        if (this.$sessionStorage.getItem('parentRoutePath')) {
+          return this.$sessionStorage.getItem('parentRoutePath')
+        }
 
-      return this.$store.state.app.parentRoutePath
+        return this.$store.state.app.parentRoutePath
+      }
     },
     appLogo () {
       return LOGO

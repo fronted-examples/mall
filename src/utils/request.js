@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
-// import { sessionMemory } from '@/utils/storage'
 
 import { createStore } from '@/store'
 import Cookies from 'js-cookie'

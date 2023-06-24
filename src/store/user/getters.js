@@ -1,9 +1,18 @@
-import { sessionMemory } from '@/utils/storage'
+
+import Storage from '@/utils/storage'
 
 const getters = {
   validateCodeImg: (state) => state.validateCodeImg,
-  accessToken: (state) => state.accessToken || sessionMemory.getItem('accessToken'),
-  userInfo: (state) => state.userInfo || Object({}, state.userInfo, sessionMemory.getItem('userInfo'))
+  accessToken: (state) => state.accessToken,
+  userInfo: (state) => {
+    if (process.env.VUE_ENV === 'client') {
+      const sessionStorage = new Storage('sessionStorage')
+
+      return  state.userInfo || Object({}, state.userInfo, sessionStorage.getItem('userInfo'))
+    } else {
+      return null
+    }
+  }
 }
 
 export default getters

@@ -3,7 +3,8 @@ const base = require('./webpack.base.config')
 const CompressionPlugin = require('compression-webpack-plugin')
 const WebpackBar = require('webpackbar')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 const { merge } = require('webpack-merge')
@@ -18,9 +19,10 @@ const plugins = [
         'process.env.VUE_ENV': '"client"'
     }),
     new VueSSRClientPlugin(),
-    // new MiniCssExtractPlugin({
-    //     filename: 'style.css'
-    // })
+    new MiniCssExtractPlugin({
+        filename: '[name].[contenthash:8].css',
+        chunkFilename: '[name].[contenthash:8].[chunkhash:7].css'
+    })
 ]
 
 if (isProd) {
@@ -41,6 +43,20 @@ const config = {
     entry: {
         app: './src/entry-client.js'
     },
+    module: {
+        rules: [
+          {
+            test: /\.(sc|c)ss$/,
+            use: [
+                //   isProd ? MiniCssExtractPlugin.loader : 'vue-style-loader',
+                MiniCssExtractPlugin.loader,
+                'css-loader',
+                'postcss-loader',
+                'sass-loader',
+            ],
+          }
+        ]
+      },
     plugins,
     optimization: {
         runtimeChunk: {

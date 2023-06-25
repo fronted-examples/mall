@@ -1,23 +1,14 @@
 <template>
   <section class="article">
-    <template v-if="article">
-      <markdown-preview
-                        :content="article.content" />
-    </template>
+    <markdown-reader :content="article.content" />
   </section>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Markdown from '@/components/Markdown'
-import MarkdownPreview from '@/components/MarkdownPreview'
 
 export default {
   name: 'Article',
-  components: {
-    Markdown,
-    MarkdownPreview
-  },
   data () {
     return {
       tdk: {

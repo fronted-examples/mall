@@ -19,6 +19,9 @@ import 'github-markdown-css/github-markdown.css'
 import '@/icons'
 import '@/styles/index.scss' // 全局scss样式
 
+import MarkdownReader from '@personal-lib/vue-markdown-reader'
+import '@personal-lib/vue-markdown-reader/lib/theme-chalk/index.css'
+
 if (process.env.VUE_ENV === 'client') {
   require('reset-css')
 
@@ -31,6 +34,7 @@ if (process.env.VUE_ENV === 'client') {
 Vue.component(ClientOnly.name, ClientOnly)
 Vue.use(VueMeta)
 Vue.use(ElementUI)
+Vue.use(MarkdownReader)
 
 // 需要返回一个应用程序工厂: 返回Vue实例和Router实例
 export function createApp (cookie) {

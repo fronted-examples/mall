@@ -16,7 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "@personal-lib/vue-markdown-reader": "^1.0.8",
-    "@personal-lib/vue-tinymce-editor": "^1.0.0",
     "@tinymce/tinymce-vue": "^2.1.0",
     "axios": "^0.27.2",
     "clipboard": "^2.0.11",

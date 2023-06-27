@@ -83,7 +83,6 @@
                      :uploadImage="uploadImage"
                      :uploadFile="uploadMedia"
                      v-model="richText" />
-                     <!-- <vue-tinymce-editor v-if="editorType" v-model="richText" /> -->
     </section>
   </section>
 </template>

@@ -9,8 +9,6 @@ import { createStore } from './store/index'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-import VueTinymceEditor from '@personal-lib/vue-tinymce-editor/dist/vue-tinymce-editor.js'
-
 import ClientOnly from 'vue-client-only'
 import Storage from "@/utils/storage"
 

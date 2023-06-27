@@ -35,7 +35,6 @@ Vue.component(ClientOnly.name, ClientOnly)
 Vue.use(VueMeta)
 Vue.use(ElementUI)
 Vue.use(MarkdownReader)
-Vue.use(VueTinymceEditor)
 
 // 需要返回一个应用程序工厂: 返回Vue实例和Router实例
 export function createApp (cookie) {

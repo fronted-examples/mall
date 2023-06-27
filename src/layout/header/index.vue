@@ -32,6 +32,7 @@
         <el-popover :appendToBody="false"
                     placement="bottom" width="242"
                     trigger="click"
+                    v-if="accessToken"
                     v-model="popoverVisible">
           <section class="user-info">
             <div
@@ -65,7 +66,6 @@
             </ul>
           </section>
           <img class="avatar" slot="reference"
-               v-if="accessToken"
                :src="avatarUrl"
                alt="头像" />
         </el-popover>
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapState } from 'vuex'
 
 const LOGO = require('~/static/favicon.ico')
 

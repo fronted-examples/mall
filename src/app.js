@@ -9,6 +9,8 @@ import { createStore } from './store/index'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+import VueTinymceEditor from '@personal-lib/vue-tinymce-editor/dist/vue-tinymce-editor.js'
+
 import ClientOnly from 'vue-client-only'
 import Storage from "@/utils/storage"
 
@@ -35,6 +37,7 @@ Vue.component(ClientOnly.name, ClientOnly)
 Vue.use(VueMeta)
 Vue.use(ElementUI)
 Vue.use(MarkdownReader)
+Vue.use(VueTinymceEditor)
 
 // 需要返回一个应用程序工厂: 返回Vue实例和Router实例
 export function createApp (cookie) {

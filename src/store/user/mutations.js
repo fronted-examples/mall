@@ -9,7 +9,7 @@ import Cookies from 'js-cookie'
 import Storage from '@/utils/storage'
 
 const mutations = {
-  [INIT_TOKEN]: (state, accessToken) => {
+  [INIT_TOKEN]: (state, accessToken = '') => {
     state.accessToken = accessToken
     Cookies.set('accessToken', accessToken)
   },

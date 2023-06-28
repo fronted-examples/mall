@@ -12,7 +12,7 @@ import { getRandomCode, login, logout, getUserInfo } from '@/apis/index'
 
 const actions = {
   nuxtServerInit ({ commit, state }, { request }) {
-    let accessToken = null
+    let accessToken
     if (request && request.headers && request.headers.cookie) {
       const parsed = cookieParse(request.headers.cookie)
       try {

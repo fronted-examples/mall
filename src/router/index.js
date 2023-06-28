@@ -13,6 +13,7 @@ const Comics = resolve => require(['@/views/recommend/comics/index'], resolve)
 const Film = resolve => require(['@/views/recommend/film/index'], resolve)
 
 const Article = resolve => require(['@/views/article/index'], resolve)
+const Book = resolve => require(['@/views/book/index'], resolve)
 
 const Live = resolve => require(['@/views/live/index'], resolve)
 const Plaza = resolve => require(['@/views/plaza/index'], resolve)
@@ -203,6 +204,26 @@ export const constantRoutes = [
         icon: 'user',
         keywords: '文章',
         description: '文章'
+      }
+    }]
+  },
+  {
+    path: `${process.env.BASE_URL}/book`,
+    component: Layout,
+    redirect: `${process.env.BASE_URL}/book/:bookId`,
+    meta: {
+      hidden: true
+    },
+    children: [{
+      path: `${process.env.BASE_URL}/book/:bookId`,
+      component: Book,
+      name: 'book',
+      meta: {
+        parentRoute: `${process.env.BASE_URL}/book`,
+        title: '书1',
+        icon: 'user',
+        keywords: '书',
+        description: '书'
       }
     }]
   },

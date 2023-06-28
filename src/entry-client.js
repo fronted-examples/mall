@@ -7,19 +7,28 @@ import Cookies from 'js-cookie'
 const { app, router, store } = createApp(Cookies.get('accessToken'))
 
 Vue.mixin({
-    // 这种写法是组件每次挂载时就会执行组件或页面中的asyncData方法
-    beforeCreate () {
-        const { asyncData } = this.$options
-        if (asyncData) {
-            // 将获取数据操作分配给 promise
-            // 以便在组件中，我们可以在数据准备就绪后
-            // 通过运行 `this.dataPromise.then(...)` 来执行其他任务
-            this.serverData = asyncData({
-                store: this.$store,
-                route: this.$route
-            })
-        }
-    },
+    /**
+     * 这种写法是组件每次挂载时就会执行组件或页面中的asyncData方法
+     * 因为asyncData是用来进行服务端请求的
+     * 所以客户端不需要绑定该方法
+     * 如果绑定了，则服务端请求会在客户端再一次请求
+     * 这里注释了该方法，客户端就不再发起在服务端已经发起过的请求了
+     * @param {*} to 
+     * @param {*} from 
+     * @param {*} next 
+     */
+    // beforeCreate () {
+    //     const { asyncData } = this.$options
+    //     if (asyncData) {
+    //         // 将获取数据操作分配给 promise
+    //         // 以便在组件中，我们可以在数据准备就绪后
+    //         // 通过运行 `this.dataPromise.then(...)` 来执行其他任务
+    //         this.serverData = asyncData({
+    //             store: this.$store,
+    //             route: this.$route
+    //         })
+    //     }
+    // },
 
     beforeRouteUpdate (to, from, next) {
         const { asyncData } = this.$options

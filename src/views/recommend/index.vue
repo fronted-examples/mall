@@ -1,13 +1,13 @@
 <template>
-  <section class="home flex-row">
+  <section class="recommend">
     <div class="index-nav"
          :class="[headerVisible ? '' : 'index-nav-top']">
-      <nav class="nav-list">
+      <nav class="nav-list flex-row">
         <div class="nav-item"
              :class="[currentRoutePath === nav.path ? 'is-active' : '']"
              v-for="(nav, index) of navList"
              :key="index" @click="toNav(nav)">
-          <svg-icon :icon-class="nav.icon" />
+          <!-- <svg-icon :icon-class="nav.icon" /> -->
           <span>{{ nav.label }}</span>
         </div>
       </nav>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { homeChildren } from '@/router'
+import { recommendChildren } from '@/router'
 
 export default {
   name: 'Home',
@@ -47,7 +47,7 @@ export default {
       }
     },
     navList () {
-      return homeChildren.map((child) => {
+      return recommendChildren.map((child) => {
         return {
           label: child.meta.title,
           name: child.name,
@@ -71,22 +71,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home {
+.recommend {
   margin-top: 20px;
   .index-nav {
-    width: 180px;
+    min-width: 1200px;
     position: sticky; /* 父级元素或祖先元素的overflow除overflow:visible以外其他属性，都会使sticky失效 */
-    top: 80px;
+    top: 60px;
     margin-right: 20px;
-    height: fit-content;
     border-radius: 4px;
-    background-color: #fff;
-    max-height: calc(100vh - 101px);
+    background-color: #f2f3f5;
     overflow-x: hidden;
+    z-index: 1000;
+    transition: top .2s;
   }
   .index-nav-top {
-    top: 20px;
-    max-height: calc(100vh - 40px);
+    top: 0;
   }
   .nav-list {
     min-width: 180px;
@@ -95,18 +94,21 @@ export default {
     font-size: 16px;
     color: #515767;
     .nav-item {
-      height: 25px;
-      line-height: 25px;
+      width: 60px;
       padding: 10px 17px;
+      white-space: nowrap;
+      border-radius: 25px;
+      text-align: center;
+      margin: 0 10px;
       cursor: pointer;
       &.is-active {
         color: #1e80ff;
-        background-color: #f7f8fa;
+        background-color: #fff;
       }
 
       &:hover {
         color: #1e80ff;
-        background-color: #f7f8fa;
+        background-color: #fff;
       }
       .svg-icon {
         margin-right: 10px;
@@ -114,7 +116,7 @@ export default {
     }
   }
   .content {
-    width: calc(100% - 200px);
+    min-width: 1200px;
   }
 }
 </style>

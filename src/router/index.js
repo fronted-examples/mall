@@ -5,19 +5,18 @@ import Router from 'vue-router'
 import Layout from '@/layout/index'
 import { async } from 'q'
 
-const Home = resolve => require(['@/views/home/index'], resolve)
-const Follow = resolve => require(['@/views/home/follow/index'], resolve)
-const Recommended = resolve => require(['@/views/home/recommend/index'], resolve)
-const Fronted = resolve => require(['@/views/home/fronted/index'], resolve)
-const Backend = resolve => require(['@/views/home/backend/index'], resolve)
-const Android = resolve => require(['@/views/home/android/index'], resolve)
-const IOS = resolve => require(['@/views/home/ios/index'], resolve)
+const Recommend = resolve => require(['@/views/recommend/index'], resolve)
+const Follow = resolve => require(['@/views/recommend/follow/index'], resolve)
+const History = resolve => require(['@/views/recommend/history/index'], resolve)
+const Novel = resolve => require(['@/views/recommend/novel/index'], resolve)
+const Comics = resolve => require(['@/views/recommend/comics/index'], resolve)
+const Film = resolve => require(['@/views/recommend/film/index'], resolve)
 
 const Article = resolve => require(['@/views/article/index'], resolve)
 
-const Activity = resolve => require(['@/views/activity/index'], resolve)
-const Subjects = resolve => require(['@/views/subjects/index'], resolve)
-const Boiling = resolve => require(['@/views/boiling/index'], resolve)
+const Live = resolve => require(['@/views/live/index'], resolve)
+const Plaza = resolve => require(['@/views/plaza/index'], resolve)
+const Chat = resolve => require(['@/views/chat/index'], resolve)
 
 const Editor = resolve => require(['@/views/editor/index'], resolve)
 
@@ -35,7 +34,7 @@ Router.prototype.push = function push (location, onResolve, onReject) {
   return originalPush.call(this, location).catch(err => err)
 }
 
-export const homeChildren = [{
+export const recommendChildren = [{
   path: `${process.env.BASE_URL}/follow`,
   name: 'follow',
   component: Follow,
@@ -47,59 +46,48 @@ export const homeChildren = [{
     description: '描述关注'
   }
 }, {
-  path: `${process.env.BASE_URL}/recommended`,
-  name: 'recommended',
-  component: Recommended,
+  path: `${process.env.BASE_URL}/novel`,
+  name: 'novel',
+  component: Novel,
   meta: {
     parentRoute: `${process.env.BASE_URL}`,
-    title: '综合',
-    icon: 'nav',
-    keywords: '综合',
-    description: '综合'
-  }
-}, {
-  path: `${process.env.BASE_URL}/backend`,
-  name: 'backend',
-  component: Backend,
-  meta: {
-    parentRoute: `${process.env.BASE_URL}`,
-    title: '后端',
+    title: '小说',
     icon: 'backend',
-    keywords: '后端',
-    description: '后端'
+    keywords: '小说',
+    description: '小说'
   }
 }, {
-  path: `${process.env.BASE_URL}/fronted`,
-  name: 'fronted',
-  component: Fronted,
+  path: `${process.env.BASE_URL}/history`,
+  name: 'history',
+  component: History,
   meta: {
     parentRoute: `${process.env.BASE_URL}`,
-    title: '前端',
+    title: '历史',
+    icon: 'nav',
+    keywords: '历史',
+    description: '历史'
+  }
+}, {
+  path: `${process.env.BASE_URL}/comics`,
+  name: 'comics',
+  component: Comics,
+  meta: {
+    parentRoute: `${process.env.BASE_URL}`,
+    title: '漫画',
     icon: 'fronted',
-    keywords: '前端',
-    description: '前端'
+    keywords: '漫画',
+    description: '漫画'
   }
 }, {
-  path: `${process.env.BASE_URL}/android`,
-  name: 'android',
-  component: Android,
+  path: `${process.env.BASE_URL}/film`,
+  name: 'film',
+  component: Film,
   meta: {
     parentRoute: `${process.env.BASE_URL}`,
-    title: 'Android',
+    title: '影视',
     icon: 'android',
-    keywords: 'Android',
-    description: 'Android'
-  }
-}, {
-  path: `${process.env.BASE_URL}/iOS`,
-  name: 'ios',
-  component: IOS,
-  meta: {
-    parentRoute: `${process.env.BASE_URL}`,
-    title: 'iOS',
-    icon: 'ios',
-    keywords: 'iOS',
-    description: 'iOS'
+    keywords: '影视',
+    description: '影视'
   }
 }]
 
@@ -109,92 +97,92 @@ export const constantRoutes = [
     component: Layout,
     redirect: `${process.env.BASE_URL}/`,
     meta: {
-      title: '首页',
+      title: '推荐',
       icon: 'user',
-      keywords: '首页',
-      description: '首页'
+      keywords: '推荐',
+      description: '推荐'
     },
     children: [{
       path: `${process.env.BASE_URL}/`,
-      name: 'home',
-      component: Home,
-      redirect: `${process.env.BASE_URL}/recommended`,
+      name: 'recommend',
+      component: Recommend,
+      redirect: `${process.env.BASE_URL}/novel`,
       meta: {
         parentRoute: `${process.env.BASE_URL}`,
-        title: '首页',
+        title: '推荐',
         icon: 'user',
-        keywords: '首页',
-        description: '首页'
+        keywords: '推荐',
+        description: '推荐'
       },
-      children: homeChildren
+      children: recommendChildren
     }]
   },
   {
-    path: `${process.env.BASE_URL}/boiling`,
+    path: `${process.env.BASE_URL}/plaza`,
     component: Layout,
-    redirect: `${process.env.BASE_URL}/boiling`,
+    redirect: `${process.env.BASE_URL}/plaza`,
     meta: {
-      title: '沸点',
+      title: '广场',
       icon: 'user',
-      keywords: '沸点',
-      description: '沸点'
+      keywords: '广场',
+      description: '广场'
     },
     children: [{
-      path: `${process.env.BASE_URL}/boiling`,
-      name: 'boiling',
-      component: Boiling,
+      path: `${process.env.BASE_URL}/plaza`,
+      name: 'plaza',
+      component: Plaza,
       meta: {
-        parentRoute: `${process.env.BASE_URL}/boiling`,
-        title: '沸点',
+        parentRoute: `${process.env.BASE_URL}/plaza`,
+        title: '广场',
         icon: 'user',
-        keywords: '沸点',
-        description: '沸点'
-      },
-    }]
-  },
-  {
-    path: `${process.env.BASE_URL}/subjects`,
-    component: Layout,
-    redirect: `${process.env.BASE_URL}/subjects`,
-    meta: {
-      title: '课程',
-      icon: 'user',
-      keywords: '课程',
-      description: '课程'
-    },
-    children: [{
-      path: `${process.env.BASE_URL}/subjects`,
-      name: 'subjects',
-      component: Subjects,
-      meta: {
-        parentRoute: `${process.env.BASE_URL}/subjects`,
-        title: '课程',
-        icon: 'user',
-        keywords: '课程',
-        description: '课程'
+        keywords: '广场',
+        description: '广场'
       },
     }]
   },
   {
-    path: `${process.env.BASE_URL}/activity`,
+    path: `${process.env.BASE_URL}/live`,
     component: Layout,
-    redirect: `${process.env.BASE_URL}/activity`,
+    redirect: `${process.env.BASE_URL}/live`,
     meta: {
-      title: '活动',
+      title: '直播',
       icon: 'user',
-      keywords: '活动',
-      description: '活动'
+      keywords: '直播',
+      description: '直播'
     },
     children: [{
-      path: `${process.env.BASE_URL}/activity`,
-      name: 'activity',
-      component: Activity,
+      path: `${process.env.BASE_URL}/live`,
+      name: 'live',
+      component: Live,
       meta: {
-        parentRoute: `${process.env.BASE_URL}/activity`,
-        title: '活动',
+        parentRoute: `${process.env.BASE_URL}/live`,
+        title: '直播',
         icon: 'user',
-        keywords: '活动',
-        description: '活动'
+        keywords: '直播',
+        description: '直播'
+      },
+    }]
+  },
+  {
+    path: `${process.env.BASE_URL}/chat`,
+    component: Layout,
+    redirect: `${process.env.BASE_URL}/chat`,
+    meta: {
+      title: '聊天',
+      icon: 'user',
+      keywords: '聊天',
+      description: '聊天'
+    },
+    children: [{
+      path: `${process.env.BASE_URL}/chat`,
+      name: 'chat',
+      component: Chat,
+      meta: {
+        parentRoute: `${process.env.BASE_URL}/chat`,
+        title: '聊天',
+        icon: 'user',
+        keywords: '聊天',
+        description: '聊天'
       },
     }]
   },

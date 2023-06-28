@@ -1,5 +1,5 @@
 <template>
-  <section class="recommend">
+  <section class="film">
     <ul class="article-list">
       <el-skeleton v-if="!articleList.length"
                    :rows="6" animated />
@@ -124,7 +124,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recommend {
+.film {
   width: 100%;
   background-color: #fff;
   border-radius: 4px;

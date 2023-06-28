@@ -1,5 +1,5 @@
 <template>
-  <section class="recommend">
+  <section class="history">
     <ul class="article-list">
       <el-skeleton v-if="!articleList.length"
                    :rows="6" animated />
@@ -41,9 +41,8 @@
             </ul>
           </div>
 
-          <img loading="lazy" class="thumb"
-              alt="封面"
-              :src="`${image_prefix}${article.cover}`" />
+          <img loading="lazy" class="thumb" alt="封面"
+               :src="`${image_prefix}${article.cover}`" />
         </div>
       </li>
     </ul>
@@ -56,10 +55,10 @@ import { reachBottom } from '@/utils/dom.js'
 import { uniqueArray } from '@/utils/utils.js'
 
 export default {
-  name: 'Frontend',
+  name: 'Recommend',
   data () {
     return {
-      categoryId: 1,
+      categoryId: null,
       pageInfo: {
         pageIndex: 1,
         pageSize: 10,
@@ -125,7 +124,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.recommend {
+.history {
   width: 100%;
   background-color: #fff;
   border-radius: 4px;

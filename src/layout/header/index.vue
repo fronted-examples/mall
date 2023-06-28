@@ -160,8 +160,12 @@ export default {
       return `${process.env.IMAGE_PREFIX}/user-management/image/default_avatar.svg`
     }
   },
-  mounted () {
-    console.log('parentRoutePath: ', this.parentRoutePath)
+  watch: {
+    loginVisible (newVal) {
+      if (newVal) {
+        this.getValidateCode()
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -170,6 +174,10 @@ export default {
       getRandomCode: 'user/getRandomCode'
     }),
     toNav (item, index) {
+      if (item.path === '/mall/chat' && !this.accessToken) {
+        this.loginVisible = true
+        return false
+      }
       this.$emit('navClick', item, index)
     },
     toMenu (item, index) {
@@ -177,7 +185,6 @@ export default {
     },
     toLogin () {
       this.loginVisible = true
-      this.getValidateCode()
     },
     login () {
       this.loading = true
@@ -211,7 +218,7 @@ export default {
   background: #fff;
   border-bottom: 1px solid #f1f1f1;
   color: #909090;
-  z-index: 250;
+  z-index: 1001;
 
   position: fixed;
   top: 0;

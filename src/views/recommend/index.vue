@@ -72,6 +72,8 @@ export default {
 
 <style lang="scss" scoped>
 .recommend {
+  width: 1200px;
+  margin: 0 auto;
   margin-top: 20px;
   .index-nav {
     min-width: 1200px;

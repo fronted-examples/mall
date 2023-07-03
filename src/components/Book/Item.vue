@@ -88,6 +88,7 @@ export default {
         .desc {
             font-size: 12px;
             padding-right: 5px;
+            padding-bottom: 5px;
             position: absolute;
             bottom: 0;
             left: 0;

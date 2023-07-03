@@ -18,11 +18,10 @@ export default {
 
 <style lang="scss" scoped>
 .main-content {
-  max-width: 1200px;
   position: relative;
   margin: 0 auto;
   width: 100%;
-  padding-top: 0;
+  padding: 0;
   overflow: visible;
 }
 </style>

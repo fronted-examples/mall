@@ -91,6 +91,16 @@ img:not([src]) {
   background-size: 100% 100%;
 }
 
+.clearfix {
+  &::after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
 /* 在全局CSS里引用: */
 /* 滚动条宽度 */
 ::-webkit-scrollbar {

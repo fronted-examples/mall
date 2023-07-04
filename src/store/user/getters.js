@@ -8,7 +8,7 @@ const getters = {
     if (process.env.VUE_ENV === 'client') {
       const sessionStorage = new Storage('sessionStorage')
 
-      return  state.userInfo || Object({}, state.userInfo, sessionStorage.getItem('userInfo'))
+      return  state.userInfo || Object.assign({}, state.userInfo, sessionStorage.getItem('userInfo'))
     } else {
       return null
     }

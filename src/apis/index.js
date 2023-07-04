@@ -1,84 +1,29 @@
-import request from '@/utils/request'
+export { 
+  getRandomCode, 
+  login 
+} from './auth'
 
-export const getPosts = () => {
-  return request({
-    url: '/api/v1/topics'
-  })
-}
+export { 
+  getArticleCategoryList,
+  addArticle,
+  getArticleByArticleId,
+  editArticle,
+  getArticleListByKeyword,
+  getArticleListByCategoryId
+} from './article'
 
-export const getRandomCode = () => {
-  return request({
-    url: '/auth/getRandomCode',
-    method: 'get',
-    responseType: 'arraybuffer'
-  })
-}
+export {
+  uploadSingleFile,
+  createMultipartUpload,
+  completeMultipartUpload,
+  upload,
+  getOffsetList,
+  downloadFile
+} from './upload'
 
-export const login = data => {
-  return request({
-    url: '/auth/login',
-    method: 'post',
-    data
-  })
-}
-
-export const logout = () => {
-  return request({
-    url: '/logout',
-    method: 'post'
-  })
-}
-
-export const getUserInfo = () => {
-  return request({
-    url: '/user/getUserInfo',
-    method: 'get'
-  })
-}
-
-export const getArticleCategoryList = () => {
-  return request({
-    url: '/articleCategory/getArticleCategoryList',
-    method: 'get'
-  })
-}
-
-export const addArticle = (data) => {
-  return request({
-    url: '/article/addArticle',
-    method: 'post',
-    data
-  })
-}
-
-export const getArticleByArticleId = (params) => {
-  return request({
-    url: '/article/getArticleByArticleId',
-    method: 'get',
-    params
-  })
-}
-
-export const editArticle = (data) => {
-  return request({
-    url: '/article/editArticle',
-    method: 'patch',
-    data
-  })
-}
-
-export const getArticleListByKeyword = (params) => {
-  return request({
-    url: '/article/getArticleListByKeyword',
-    method: 'get',
-    params
-  })
-}
-
-export const getArticleListByCategoryId = (params) => {
-  return request({
-    url: '/article/getArticleListByCategoryId',
-    method: 'get',
-    params
-  })
-}
+export {
+  getUserInfo,
+  getUserListByKeyword,
+  sendSingleMessage,
+  logout
+} from './user'

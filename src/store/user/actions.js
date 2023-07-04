@@ -3,7 +3,7 @@ import {
   INIT_TOKEN,
   LOGOUT,
   GET_RANDOMCODE,
-  GET_USER_INFO
+  UPDATE_USER_INFO
 } from './constants'
 
 import { cookieParse } from '@/utils/auth'
@@ -29,7 +29,7 @@ const actions = {
         if (code === 200) {
           context.commit(INIT_TOKEN, accessToken)
 
-          context.dispatch(GET_USER_INFO).then(() => {
+          context.dispatch(UPDATE_USER_INFO).then(() => {
             resolve()
           })
         }
@@ -50,11 +50,11 @@ const actions = {
       })
     })
   },
-  [GET_USER_INFO]: (context) => {
+  [UPDATE_USER_INFO]: (context) => {
     return new Promise((resolve, reject) => {
       getUserInfo().then(({ code, data: { userInfo } }) => {
         if (code === 200) {
-          context.commit(GET_USER_INFO, userInfo)
+          context.commit(UPDATE_USER_INFO, userInfo)
           resolve()
         }
       }).catch(error => {

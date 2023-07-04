@@ -7,6 +7,7 @@
        :class="svgClass"
        aria-hidden="true"
        v-on="$listeners">
+    <title>{{ title }}</title>
     <use :xlink:href="iconName" />
   </svg>
 </template>
@@ -21,6 +22,10 @@ export default {
     iconClass: {
       type: String,
       required: true
+    },
+    title: {
+      type: String,
+      default: ''
     },
     className: {
       type: String,

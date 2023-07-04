@@ -6,4 +6,4 @@ export const LOGOUT = 'logout'
 
 export const GET_RANDOMCODE = 'getRandomCode'
 
-export const GET_USER_INFO = 'getUserInfo'
+export const UPDATE_USER_INFO = 'updateUserInfo'

@@ -2,7 +2,7 @@ import {
   INIT_TOKEN,
   LOGOUT,
   GET_RANDOMCODE,
-  GET_USER_INFO
+  UPDATE_USER_INFO
 } from './constants'
 
 import Cookies from 'js-cookie'
@@ -26,7 +26,7 @@ const mutations = {
   [GET_RANDOMCODE]: (state, data) => {
     state.validateCodeImg = data
   },
-  [GET_USER_INFO]: (state, data) => {
+  [UPDATE_USER_INFO]: (state, data) => {
     state.userInfo = data
 
     if (process.env.VUE_ENV === 'client') {

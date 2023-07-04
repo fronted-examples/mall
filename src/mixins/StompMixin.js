@@ -1,6 +1,7 @@
 import SockJS from 'sockjs-client/dist/sockjs.min.js'
 import Stomp from 'stompjs'
-import store from '@/store/index'
+
+import { mapGetters } from 'vuex'
 
 const DEFAULT_URL = process.env.VUE_APP_API_SOCKET_URL
 
@@ -11,6 +12,9 @@ const stomp = {
       stompClient: null,
       checkInterval: null
     }
+  },
+  computed: {
+    ...mapGetters('user', ['accessToken'])
   },
   methods: {
     stompInit (success = function () { }, fail = function () { }, url = DEFAULT_URL) {
@@ -60,7 +64,7 @@ const stomp = {
       this.stompClient.heartbeat.incoming = 0 // 后台对前端心跳监控，若为0则不进行心跳监控
 
       const headers = {
-        Authorization: `Bearer ${store.getters['user/token']}`
+        Authorization: `Bearer ${this.accessToken}`
       }
 
       // 向服务器发起websocket连接

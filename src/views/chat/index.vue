@@ -9,7 +9,7 @@
       <room-content ref="message-list">
         <message-item v-for="message of messageList" :key="message.messageId" :message="message" />
       </room-content>
-      <room-tool :on-upload-file="fileChange" @change="onSelectMessageType" />
+      <room-tool :on-upload-file="fileChange" @change="onSelectMessageType" @video-call="onVideoCall" />
       <room-footer @send="onSend" />
     </div>
   </section>
@@ -104,17 +104,27 @@ export default {
     },
     onChangeContactor (contactor) {
       this.contactor = contactor
+      this.messageList = []
     },
-    onSelectMessageType (tool) {
+    onVideoCall (val) {
+      this.setMessage(val)
+
+      this.sendSingleMessage()
+    },
+    onSelectMessageType (tool, data) {
       if (tool.type === 'media') {
         this.message.chatType = tool.value
+        this.message.offer = data.offer
+        this.message.candidate = data.candidate
+        this.message.answer = data.answer
+        this.message.mediaMessageOperate = data.mediaMessageOperate
         
         this.setMessage()
 
         this.sendSingleMessage()
       }
 
-      if (tool.type === 'message') {
+      if (tool.type === 'file') {
         this.message.contentType = tool.value
       }
     },
@@ -220,24 +230,29 @@ export default {
 
       this.sendSingleMessage()
     },
-    setMessage (file) {
+    setMessage (data) {
       this.message.fromUser.userId = this.userInfo.userId
       this.message.fromUser.username = this.userInfo.username
       this.message.toUser.userId = this.contactor.userId
       this.message.toUser.username = this.contactor.username
 
       // 文件类型
-      if (file) {
-          this.message.filename = file.name
-          this.message.fileType = file.type
-          this.message.fileSize = file.size
-          this.message.fileId = file.id
+      if (data) {
+          this.message.filename = data.name
+          this.message.fileType = data.type
+          this.message.fileSize = data.size
+          this.message.fileId = data.id
+          this.chatType = data.chatType
+          this.mediaMessageOperate = data.mediaMessageOperate
+          this.offer = data.offer
+          this.answer = data.answer
+          this.candidate = data.candidate
 
-          if (file.type.indexOf('image') !== -1) {
+          if (data.type.indexOf('image') !== -1) {
             this.message.contentType = 1
           }
 
-          if (file.type.indexOf('video') !== -1) {
+          if (data.type.indexOf('video') !== -1) {
             this.message.contentType = 2
           }
       }
@@ -257,48 +272,50 @@ export default {
             }
           }
 
-          // if (data.chatType === 2) {
-          //   this.chatType = data.chatType
-          //   if (data.mediaMessageOperate === 0) {
-          //     this.$confirm(`${data.fromUser.username}邀请您进行通话, 是否接听?`, '提示', {
-          //       confirmButtonText: '接听',
-          //       cancelButtonText: '拒绝',
-          //       type: 'warning'
-          //     }).then(() => {
-          //       this.$refs['vue-message'].launchOffer()
-          //     }).catch((err) => {
-          //       console.error(err)
-          //       this.mediaMessageOperate = 2
-          //       this.sendSingleMessage()
-          //     })
-          //   }
+          console.log('messageList: ', this.messageList)
 
-          //   if (data.mediaMessageOperate === 1) {
-          //     this.$refs['vue-message'].replyOffer(this.offer)
-          //   }
+          if (data.chatType === 2) {
+            this.chatType = data.chatType
+            if (data.mediaMessageOperate === 0) {
+              this.$confirm(`${data.fromUser.username}邀请您进行通话, 是否接听?`, '提示', {
+                confirmButtonText: '接听',
+                cancelButtonText: '拒绝',
+                type: 'warning'
+              }).then(() => {
+                // this.$refs['vue-message'].launchOffer()
+              }).catch((err) => {
+                console.error(err)
+                this.mediaMessageOperate = 2
+                this.sendSingleMessage()
+              })
+            }
 
-          //   if (data.mediaMessageOperate === 2) {
-          //     this.$message.error('对方已拒绝！')
-          //     this.$refs['vue-message'].handleHang()
-          //   }
+            if (data.mediaMessageOperate === 1) {
+              // this.$refs['vue-message'].replyOffer(this.offer)
+            }
 
-          //   if (data.mediaMessageOperate === 3) {
-          //     this.$message.warning('对方已挂断！')
-          //     this.$refs['vue-message'].handleHang()
-          //   }
+            if (data.mediaMessageOperate === 2) {
+              this.$message.error('对方已拒绝！')
+              // this.$refs['vue-message'].handleHang()
+            }
 
-          //   if (data.mediaMessageOperate === 4) {
-          //     this.$refs['vue-message'].replyOffer(data.offer)
-          //   }
+            if (data.mediaMessageOperate === 3) {
+              this.$message.warning('对方已挂断！')
+              // this.$refs['vue-message'].handleHang()
+            }
 
-          //   if (data.mediaMessageOperate === 5) {
-          //     this.$refs['vue-message'].handleAnswer(data.answer)
-          //   }
+            if (data.mediaMessageOperate === 4) {
+              // this.$refs['vue-message'].replyOffer(data.offer)
+            }
 
-          //   if (data.mediaMessageOperate === 6) {
-          //     this.$refs['vue-message'].handleCandidate(data.candidate)
-          //   }
-          // }
+            if (data.mediaMessageOperate === 5) {
+              // this.$refs['vue-message'].handleAnswer(data.answer)
+            }
+
+            if (data.mediaMessageOperate === 6) {
+              // this.$refs['vue-message'].handleCandidate(data.candidate)
+            }
+          }
         })
       }, (err) => {
         console.log('err: ', err)

@@ -4,12 +4,18 @@
         <svg-icon icon-class="folder" title="文件" @click.stop="onChange(1)" />
         <svg-icon icon-class="image" title="图片" @click.stop="onChange(2)" />
 
-        <video-call :visible.sync="visible" />
+        <video-call ref="video-call" :visible.sync="visible" />
     </section>
 </template>
 
 <script>
 import VideoCall from './VideoCall.vue'
+
+let WebRTC
+if (process.env.VUE_ENV === 'client') {
+  WebRTC = require('@/utils/web-rtc').WebRTC
+}
+
 export default {
     name: 'RoomTool',
     props: {
@@ -27,41 +33,61 @@ export default {
             visible: false,
             toolsMap: {
                 0: {
-                    type: 'media',
+                    type: 'video-call',
                     value: 3,
-                    callback: this.videoCall
+                    callback: this.openVideo
                 },
                 1: {
-                    type: 'message',
+                    type: 'file',
                     value: 4,
                     callback: this.uploadFile
                 },
                 2: {
-                    type: 'message',
+                    type: 'file',
                     value: 1,
                     callback: this.uploadImage
                 }
-            }
+            },
+            webRTC: null
         }
     },
     methods: {
         onChange (type) {
-            this.toolsMap[type].callback().then((files) => {
-                this.$emit('change', this.toolsMap[type])
+            this.toolsMap[type].callback().then((data) => {
+                const tool = this.toolsMap[type]
 
-                if (files) {
-                    this.onUploadFile(files)
+                if (tool.type === 'video-call') {
+                    this.$emit('video-call', { chatType: 2, mediaMessageOperate: 0 })
+                }
+
+                if (tool.type === 'file') {
+                    this.onUploadFile(data)
+                    
+                    this.$emit('change', tool)
                 }
             })
         },
-        videoCall () {
-            return new Promise((resolve, reject) => {
+        openVideo () {
+            return new Promise((resolve) => {
                 this.visible = true
-                resolve()
+
+                this.webRTC = new WebRTC()
+                this.webRTC.requestVideo().then((stream) => {
+                    this.$refs['video-call'].addLocalVideoURL(stream)
+
+                    this.webRTC.createConnection(stream, (remoteStream) => {
+                        this.$refs['video-call'].addRemoteVideoURL(remoteStream)
+                    }).then((data) => {
+                        resolve(data)
+                    })
+                })
             })
         },
+        launchOffer () {
+            
+        },
         uploadFile () {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 this.openFileSystem((files) => {
                     resolve(files)
                     this.$emit('onUploadFile', files)

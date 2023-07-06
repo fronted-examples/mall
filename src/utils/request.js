@@ -138,7 +138,6 @@ service.interceptors.response.use(
         // to re-login
         MessageBox.confirm('您的登录信息已过期，请重新登录', '确认登出', {
           confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           // 退出登录

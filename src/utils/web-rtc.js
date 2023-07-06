@@ -20,15 +20,14 @@ export function WebRTC () {
 }
 
 WebRTC.prototype.requestVideo = function () {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       navigator.mediaDevices
         .getUserMedia({ audio: true, video: true })
         .then((stream) => {
           resolve(stream)
         })
         .catch((error) => {
-            console.error(error)
-            throw new Error('请求音视频媒体失败：' + JSON.stringify(error))
+            reject(error)
         })
     })
 }
@@ -97,7 +96,7 @@ WebRTC.prototype.createOffer = function () {
     })
 }
 
-WebRTC.prototype.createAnswer = function () {
+WebRTC.prototype.createAnswer = function (offer) {
     return new Promise((resolve, reject) => {
         this.peerConn.setRemoteDescription(new RTCSessionDescription(offer))
 
@@ -129,13 +128,14 @@ WebRTC.prototype.handleCandidate = function (candidate) {
     this.peerConn.addIceCandidate(new RTCIceCandidate(candidate))
 }
 
-WebRTC.prototype.closeWebRTC = function () {
+WebRTC.prototype.closeWebRTC = function (stream) {
     return new Promise((resolve) => {
+        console.log('this: ', this)
         this.peerConn.close()
         this.peerConn.onicecandidate = null
         this.peerConn.onaddstream = null
 
-        this.closeTracks()
+        this.closeTracks(stream)
 
         resolve({
             type: 'hang',

@@ -9,7 +9,7 @@
       <room-content ref="message-list">
         <message-item v-for="message of messageList" :key="message.messageId" :message="message" />
       </room-content>
-      <room-tool :on-upload-file="fileChange" @change="onSelectMessageType" @video-call="onVideoCall" />
+      <room-tool ref="room-tool" :on-upload-file="fileChange" @change="onSelectMessageType" @video-call="onVideoCall" @hang="onVideoHang" @candidate="onVideoCandidate" @offser="onVideoOffer" />
       <room-footer @send="onSend" />
     </div>
   </section>
@@ -107,6 +107,21 @@ export default {
       this.messageList = []
     },
     onVideoCall (val) {
+      this.setMessage(val)
+
+      this.sendSingleMessage()
+    },
+    onVideoHang (val) {
+      this.setMessage(val)
+
+      this.sendSingleMessage()
+    },
+    onVideoCandidate (val) {
+      this.setMessage(val)
+
+      this.sendSingleMessage()
+    },
+    onVideoOffer (val) {
       this.setMessage(val)
 
       this.sendSingleMessage()
@@ -236,25 +251,24 @@ export default {
       this.message.toUser.userId = this.contactor.userId
       this.message.toUser.username = this.contactor.username
 
-      // 文件类型
-      if (data) {
-          this.message.filename = data.name
-          this.message.fileType = data.type
-          this.message.fileSize = data.size
-          this.message.fileId = data.id
-          this.chatType = data.chatType
-          this.mediaMessageOperate = data.mediaMessageOperate
-          this.offer = data.offer
-          this.answer = data.answer
-          this.candidate = data.candidate
+      
+      this.message.chatType = data.chatType
+      this.message.mediaMessageOperate = data.mediaMessageOperate
+      this.message.offer = data.offer
+      this.message.answer = data.answer
+      this.message.candidate = data.candidate
 
-          if (data.type.indexOf('image') !== -1) {
-            this.message.contentType = 1
-          }
+      this.message.filename = data.name
+      this.message.fileType = data.type
+      this.message.fileSize = data.size
+      this.message.fileId = data.id
 
-          if (data.type.indexOf('video') !== -1) {
-            this.message.contentType = 2
-          }
+      if (data.type && data.type.indexOf('image') !== -1) {
+        this.message.contentType = 1
+      }
+
+      if (data.type && data.type.indexOf('video') !== -1) {
+        this.message.contentType = 2
       }
     },
     initStompClient: function () {
@@ -282,38 +296,46 @@ export default {
                 cancelButtonText: '拒绝',
                 type: 'warning'
               }).then(() => {
-                // this.$refs['vue-message'].launchOffer()
+                this.$refs['room-tool'].launchOffer()
               }).catch((err) => {
                 console.error(err)
-                this.mediaMessageOperate = 2
+                
+                this.setMessage({
+                  chatType: data.chatType,
+                  mediaMessageOperate: 2,
+                  offer: data.offer,
+                  answer: data.answer,
+                  candidate: data.candidate
+                })
+
                 this.sendSingleMessage()
               })
             }
 
             if (data.mediaMessageOperate === 1) {
-              // this.$refs['vue-message'].replyOffer(this.offer)
+              this.$refs['room-tool'].replyOffer(this.offer)
             }
 
             if (data.mediaMessageOperate === 2) {
               this.$message.error('对方已拒绝！')
-              // this.$refs['vue-message'].handleHang()
+              this.$refs['room-tool'].handleHang()
             }
 
             if (data.mediaMessageOperate === 3) {
               this.$message.warning('对方已挂断！')
-              // this.$refs['vue-message'].handleHang()
+              this.$refs['room-tool'].handleHang()
             }
 
             if (data.mediaMessageOperate === 4) {
-              // this.$refs['vue-message'].replyOffer(data.offer)
+              this.$refs['room-tool'].replyOffer(data.offer)
             }
 
             if (data.mediaMessageOperate === 5) {
-              // this.$refs['vue-message'].handleAnswer(data.answer)
+              this.$refs['room-tool'].handleAnswer(data.answer)
             }
 
             if (data.mediaMessageOperate === 6) {
-              // this.$refs['vue-message'].handleCandidate(data.candidate)
+              this.$refs['room-tool'].handleCandidate(data.candidate)
             }
           }
         })
@@ -364,7 +386,6 @@ export default {
     },
     sendSingleMessage () {
       const params = {
-        isMe: true,
         chatType: this.message.chatType,
         mediaMessageOperate: this.message.mediaMessageOperate,
         fromUserId: this.message.fromUser.userId,

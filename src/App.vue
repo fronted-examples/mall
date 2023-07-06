@@ -21,6 +21,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('user', ['accessToken']),
     ...mapGetters('business', ['article', 'cacheMetaInfo'])
   },
   metaInfo () {
@@ -39,6 +40,10 @@ export default {
     this.initPath(this.$route)
 
     this.initLog()
+
+    if (this.accessToken) {
+      this.initUserInfo()
+    }
   },
   watch: {
     /**
@@ -60,23 +65,25 @@ export default {
   },
   methods: {
     ...mapActions({
+      updateUserInfo: 'user/updateUserInfo',
       updateCurrentRoutePath: 'app/updateCurrentRoutePath',
       updateParentRoutePath: 'app/updateParentRoutePath',
       updateMetaInfo: 'business/updateMetaInfo'
     }),
     initTdk (route) {
-      console.log('this.cacheMetaInfo: ', this.cacheMetaInfo)
       this.tdk.title = this.cacheMetaInfo ? this.cacheMetaInfo.title : route.meta.title
       this.tdk.keywords = this.cacheMetaInfo ? this.cacheMetaInfo.keywords : route.meta.keywords
       this.tdk.description = this.cacheMetaInfo ? this.cacheMetaInfo.description : route.meta.description
     },
     initPath (route) {
-      console.log('route: ', route)
       this.updateCurrentRoutePath(route.path)
       this.updateParentRoutePath(route.meta.parentRoute)
     },
     initLog () {
       console.log('%c 购物天堂! ', 'color:#1e80ff;font-size:20px;background:#fff;padding:8px;')
+    },
+    initUserInfo () {
+      this.updateUserInfo()
     }
   }
 };

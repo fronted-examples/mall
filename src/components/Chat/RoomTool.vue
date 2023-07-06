@@ -4,7 +4,7 @@
         <svg-icon icon-class="folder" title="文件" @click.stop="onChange(1)" />
         <svg-icon icon-class="image" title="图片" @click.stop="onChange(2)" />
 
-        <video-call ref="video-call" :visible.sync="visible" />
+        <video-call ref="video-call" :visible.sync="visible" @hang="onHang" />
     </section>
 </template>
 
@@ -48,6 +48,7 @@ export default {
                     callback: this.uploadImage
                 }
             },
+            localStream: null,
             webRTC: null
         }
     },
@@ -67,6 +68,14 @@ export default {
                 }
             })
         },
+        onHang () {
+            this.handleHang()
+
+            this.$emit('hang', {
+                chatType: 2,
+                mediaMessageOperate: 3
+            })
+        },
         openVideo () {
             return new Promise((resolve) => {
                 this.visible = true
@@ -74,17 +83,79 @@ export default {
                 this.webRTC = new WebRTC()
                 this.webRTC.requestVideo().then((stream) => {
                     this.$refs['video-call'].addLocalVideoURL(stream)
+                    
+                    this.localStream = stream
 
                     this.webRTC.createConnection(stream, (remoteStream) => {
                         this.$refs['video-call'].addRemoteVideoURL(remoteStream)
                     }).then((data) => {
-                        resolve(data)
+                        this.$emit('candidate', {
+                            chatType: 2,
+                            candidate: data.candidate,
+                            mediaMessageOperate: data.mediaMessageOperate
+                        })
                     })
+
+                    resolve()
+                }).catch((error) => {
+                    this.$message({
+                        type: 'error',
+                        message: error.toString()
+                    })
+
+                    this.visible = false
                 })
             })
         },
         launchOffer () {
-            
+            this.openVideo().then(() => {
+                this.webRTC.createOffer().then((data) => {
+                    this.$emit('offer', {
+                        chatType: 2,
+                        offer: data.offer,
+                        mediaMessageOperate: data.mediaMessageOperate
+                    })
+                })
+            })
+        },
+        /**
+         * 应答offer
+         */
+        replyOffer (offer) {
+            this.webRTC.createConnection(stream, (remoteStream) => {
+                this.$refs['video-call'].addRemoteVideoURL(remoteStream)
+            }).then((data) => {
+                this.$emit('candidate', {
+                    chatType: 2,
+                    candidate: data.candidate,
+                    mediaMessageOperate: data.mediaMessageOperate
+                })
+
+                this.webRTC.createAnswer(offer).then((data) => {
+                    this.$emit('answer', {
+                        chatType: 2,
+                        answer: data.answer,
+                        mediaMessageOperate: data.mediaMessageOperate
+                    })
+                })
+            })
+        },
+        /**
+         * 处理answer
+         */
+        handleAnswer (answer) {
+            this.webRTC.handleAnswer(answer)
+         },
+        /**
+         * 处理candidate
+         */
+        handleCandidate (candidate) {
+            this.webRTC.handleCandidate(candidate)
+        },
+        handleHang () {
+            this.webRTC.closeWebRTC(this.localStream).then((data) => {
+                this.visible = false
+            })
         },
         uploadFile () {
             return new Promise((resolve) => {

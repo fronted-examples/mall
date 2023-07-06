@@ -11,7 +11,7 @@
 
         <div class="video-operates">
             <span class="video-btn"
-                @click="onHang">
+                @click.stop="onHang">
             <svg-icon icon-class="hang" />
             <label>挂断</label>
             </span>

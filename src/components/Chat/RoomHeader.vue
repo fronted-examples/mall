@@ -27,8 +27,7 @@ export default {
     box-sizing: border-box;
     width: 100%;
     height: 60px;
-    background-color: #fff;
-    padding: 10px 12px;
+    padding: 0 10px 0;
 
     .left, .middle, .right {
         height: 100%;
@@ -41,11 +40,11 @@ export default {
     .middle {
         width: 60%;
         text-align: center;
-        line-height: 40px;
+        line-height: 60px;
         .title {
             font-size: 24px;
             font-weight: bold;
-            color: #222;
+            color: #fff;
         }
     }
 

@@ -87,6 +87,7 @@ File.prototype.resume = function (callback) {
 function Uploader (options = {}) {
   this.$options = Object.assign({}, Uploader.defaultOptions, options)
 
+  this.actions = this.$options.actions
   this.files = Array.from(this.$options.files)
   this.fileList = []
   this.chunkSize = this.$options.chunkSize
@@ -123,68 +124,69 @@ Uploader.status = {
 }
 
 Uploader.prototype.beforeUpload = async function () {
-  for (let file of this.files) {
+  for (let fileItem of this.files) {
     const params = {
-      filename: file.name,
-      file: file,
-      type: file.type,
-      size: file.size,
-      sizeString: formatSize(file.size),
-      md5: '',
-      status: '',
-      chunks: [],
+      filename: fileItem.name,
+      file: fileItem,
+      type: fileItem.type,
+      size: fileItem.size,
+      sizeString: formatSize(fileItem.size),
+      md5: await getFileChunkMd5(createFileChunk(fileItem)),
+      status: Uploader.status[this.language].waiting,
+      chunks: createFileChunk(fileItem   ),
       uploadId: '',
       uploadUrls: [],
       promises: [],
-      uploaded: '',
-      speed: '',
-      remainingTime: ''
+      uploadedSize: 0,
+      uploaded: `0${this.language === 'EN' ? 'B' : '字节'}`,
+      speed: `0${this.language === 'EN' ? 'B/s' : '字节/秒'}`,
+      remainingTime: `0${this.language === 'EN' ? 's' : '秒'}`
     }
 
-    params.chunks = createFileChunk(file)
+    let file = new File(params, this)
 
-    params.md5 = await getFileChunkMd5(params.chunks)
+    // params.chunks = createFileChunk(file)
 
-    const { uploadUrls, uploadId, fileUrl, id } = await getMultipartUpload(params)
+    // params.md5 = await getFileChunkMd5(params.chunks)
 
-    params.uploadUrls = uploadUrls
-    params.uploadId = uploadId
-    params.status = Uploader.status[this.language].waiting
-    params.uploaded = '0' + (this.language === 'EN' ? 'B' : '字节')
-    params.speed = '0' + (this.language === 'EN' ? 'B/s' : '字节/秒')
-    params.remainingTime = '0' + (this.language === 'EN' ? 's' : '秒')
+    // const { uploadUrls, uploadId, fileUrl, id } = await getMultipartUpload(params)
+
+    const { uploadUrls, uploadId, fileUrl, id } = await getMultipartUpload(file)
+
+    file.uploadUrls = uploadUrls
+    file.uploadId = uploadId
+    // params.status = Uploader.status[this.language].waiting
+    // params.uploaded = '0' + (this.language === 'EN' ? 'B' : '字节')
+    // params.speed = '0' + (this.language === 'EN' ? 'B/s' : '字节/秒')
+    // params.remainingTime = '0' + (this.language === 'EN' ? 's' : '秒')
 
     if (!uploadUrls) {
-      params.id = id
-      params.uploaded = formatSize(file.size)
-      params.uploadedSize = file.size
-      params.status = Uploader.status[this.language].success
-      params.percentage = 100.0
-      params.remainingTime = '0' + this.language === 'EN' ? 's' : '秒'
+      file.id = id
+      file.uploaded = formatSize(file.size)
+      file.uploadedSize = file.size
+      file.status = Uploader.status[this.language].success
+      file.percentage = 100.0
+      file.remainingTime = `0${this.language === 'EN' ? 's' : '秒'}`
 
-      console.log('file: ', fileUrl)
-      const currentFile = new File(params, this)
-      this.fileList.push(currentFile)
+      this.fileList.push(file)
 
-      return currentFile.uploadSuccess(Object.assign(file, { id: currentFile.id, url: fileUrl }))
+      return file.uploadSuccess(Object.assign(file, { id: file.id, url: fileUrl }))
     }
 
-    for (let i = 0; i < params.uploadUrls.length; i++) {
+    for (let i = 0; i < file.uploadUrls.length; i++) {
       let param = {
         index: i,
         // uploadUrl: params.uploadUrls[i],
-        file: params.chunks[i].file
+        file: file.chunks[i].file
       }
 
-      let uploadUrl = params.uploadUrls[i].replace('http://101.35.44.70:9000', '')
+      let uploadUrl = file.uploadUrls[i].replace('http://101.35.44.70:9000', '')
       param.uploadUrl = `${process.env.IMAGE_PREFIX}${uploadUrl}`
 
-      params.promises.push(param)
+      file.promises.push(param)
     }
 
-    const currentFile = new File(params, this)
-
-    this.fileList.push(currentFile)
+    this.fileList.push(file)
   }
 
   if (this.$options.beforeUpload) {
@@ -322,7 +324,7 @@ const startUploadPromise = (file) => {
 function getMultipartUpload (file) {
   return new Promise((resolve, reject) => {
     const params = {
-      bucketName: 'file',
+      bucketName: file.uploader.actions.bucketName,
       filename: `image/${file.filename}`,
       totalPart: file.chunks.length,
       md5: file.md5,
@@ -342,12 +344,12 @@ function getMultipartUpload (file) {
 async function mergeFile (file) {
   if (file.uploadId) {
     completeMultipartUpload({
-      userId: store.getters['user/userInfo'].userId,
+      userId: file.uploader.actions.userId,
       chunkCount: file.chunks.length,
       md5: file.md5,
       uploadId: file.uploadId,
       filename: `image/${file.filename}`,
-      bucketName: 'file'
+      bucketName: file.uploader.actions.bucketName
     }).then(({ code, data }) => {
       if (code === 200) {
         file.id = data.file.id

@@ -5,9 +5,13 @@
     </div>
 
     <div class="room">
-      <room-header title="测试" />
+      <room-header :title="contactor.nickname" />
       <room-content ref="message-list">
-        <message-item v-for="message of messageList" :key="message.messageId" :message="message" />
+        <message-item 
+          v-for="message of messageList" 
+          :key="message.messageId" 
+          :message="message"
+          @download="handleDownload" />
       </room-content>
       <room-tool ref="room-tool" :on-upload-file="fileChange" @change="onSelectMessageType" @video-call="onVideoCall" @hang="onVideoHang" @candidate="onVideoCandidate" @offser="onVideoOffer" />
       <room-footer @send="onSend" />
@@ -38,30 +42,8 @@ export default {
     return {
       userList: [],
       messageList: [],
-      message: {
-        chatType: null,
-        mediaMessageOperate: null,
-        fromUser: {
-          userId: null,
-          avatar: '',
-          username: ''
-        },
-        toUser: {
-          userId: null,
-          avatar: '',
-          username: ''
-        },
-        content: '',
-        contentType: null,
-        fileId: null,
-        filename: '',
-        fileSize: '',
-        fileType: null,
-        offer: null,
-        answer: null,
-        candidate: null
-      },
-      contactor: null,
+      message: {},
+      contactor: {},
       stompClient: null,
       fileContentList: [],
       cancels: [],
@@ -107,40 +89,59 @@ export default {
       this.messageList = []
     },
     onVideoCall (val) {
-      this.setMessage(val)
+      const params = {
+        chatType: val.chatType, 
+        mediaMessageOperate: val.mediaMessageOperate
+      }
+
+      this.setMessage(params)
 
       this.sendSingleMessage()
     },
     onVideoHang (val) {
-      this.setMessage(val)
+      const params = {
+        chatType: val.chatType,
+        mediaMessageOperate: val.mediaMessageOperate
+      }
+
+      this.setMessage(params)
 
       this.sendSingleMessage()
     },
     onVideoCandidate (val) {
-      this.setMessage(val)
+      const params = {
+        chatType: val.chatType,
+        candidate: val.candidate,
+        mediaMessageOperate: val.mediaMessageOperate
+      }
+
+      this.setMessage(params)
 
       this.sendSingleMessage()
     },
     onVideoOffer (val) {
-      this.setMessage(val)
+      const params = {
+        chatType: val.chatType,
+        offer: val.offer,
+        mediaMessageOperate: val.mediaMessageOperate
+      }
+
+      this.setMessage(params)
 
       this.sendSingleMessage()
     },
     onSelectMessageType (tool, data) {
-      if (tool.type === 'media') {
-        this.message.chatType = tool.value
-        this.message.offer = data.offer
-        this.message.candidate = data.candidate
-        this.message.answer = data.answer
-        this.message.mediaMessageOperate = data.mediaMessageOperate
+      if (tool.type === 'video-call') {
+        const params = {
+          chatType: tool.value,
+          offer: data.offer,
+          candidate: data.candidate,
+          mediaMessageOperate: data.mediaMessageOperate
+        }
         
-        this.setMessage()
+        this.setMessage(params)
 
         this.sendSingleMessage()
-      }
-
-      if (tool.type === 'file') {
-        this.message.contentType = tool.value
       }
     },
     async fileChange (files) {
@@ -155,6 +156,10 @@ export default {
       }
 
       this.uploader = new Uploader({
+        actions: {
+          userId: this.userInfo.userId,
+          bucketName: process.env.BUCKET_NAME
+        },
         files: files,
         language: 'EN',
         beforeUpload: (uploader) => {
@@ -171,10 +176,25 @@ export default {
         },
         uploadSuccess: (file) => {
           console.log('回调uploadSuccess', file)
-          this.$file.readAsDataURL(file).then(() => {
-            this.message.content = `${process.env.IMAGE_PREFIX}${file.url}`
+          this.$file.readAsDataURL(file.file).then(() => {
+            const params = {
+              chatType: 0,
+              fileId: file.id,
+              filename: file.filename,
+              fileType: file.type,
+              fileSize: file.size,
+              content: `${process.env.IMAGE_PREFIX}${file.url}`
+            }
+
+            if (file.type.indexOf('image') !== -1) {
+              params.contentType = 1
+            } else if(file.type.indexOf('video') !== -1) {
+              params.contentType = 2
+            } else {
+              params.contentType = 4
+            }
             
-            this.setMessage(file)
+            this.setMessage(params)
 
             this.sendSingleMessage()
           })
@@ -237,39 +257,47 @@ export default {
       })
     },
     onSend (message) {
-      this.message.chatType = 0
-      this.message.content = message
-      this.message.contentType = 0
+      const params = {
+        chatType: 0,
+        content: message,
+        contentType: 0
+      }
 
-      this.setMessage()
+      this.setMessage(params)
 
       this.sendSingleMessage()
     },
     setMessage (data) {
-      this.message.fromUser.userId = this.userInfo.userId
-      this.message.fromUser.username = this.userInfo.username
-      this.message.toUser.userId = this.contactor.userId
-      this.message.toUser.username = this.contactor.username
-
-      
-      this.message.chatType = data.chatType
-      this.message.mediaMessageOperate = data.mediaMessageOperate
-      this.message.offer = data.offer
-      this.message.answer = data.answer
-      this.message.candidate = data.candidate
-
-      this.message.filename = data.name
-      this.message.fileType = data.type
-      this.message.fileSize = data.size
-      this.message.fileId = data.id
-
-      if (data.type && data.type.indexOf('image') !== -1) {
-        this.message.contentType = 1
+      console.log('data: ', data)
+      this.message = {
+        chatType: Object.prototype.toString.call(data.chatType) !== '[object Undefined]' ? data.chatType : null,
+        mediaMessageOperate: Object.prototype.toString.call(data.mediaMessageOperate) !== '[object Undefined]' ? data.mediaMessageOperate : null,
+        fromUser: {
+          userId: this.userInfo.userId,
+          avatar: this.userInfo.avatar || '',
+          username: this.userInfo.username
+        },
+        toUser: {
+          userId: this.contactor.userId,
+          avatar: this.contactor.avatar || '',
+          username: this.contactor.username
+        },
+        content: data.content || '',
+        contentType: Object.prototype.toString.call(data.contentType) !== '[object Undefined]' ? data.contentType : null,
+        fileId: data.fileId,
+        filename: data.filename || '',
+        fileSize: data.fileSize || '',
+        fileType: data.fileType || null,
+        offer: data.offer || null,
+        answer: data.answer || null,
+        candidate: data.candidate || null
       }
 
-      if (data.type && data.type.indexOf('video') !== -1) {
-        this.message.contentType = 2
+      if (data.chatType === 0) {
+        this.messageList.push(this.message)
       }
+
+      console.log('messageList: ', this.messageList)
     },
     initStompClient: function () {
       this.stompInit(({ frame, stompClient }) => {
@@ -280,13 +308,11 @@ export default {
           console.info('订阅点对点消息: ', JSON.parse(res.body))
           const data = JSON.parse(res.body)
 
-          if (data.chatType === 0) {
-            if (this.contactor.userId !== this.userInfo.userId) {
-              this.messageList.push(data)
-            }
-          }
+          if (data.chatType === 0 && this.contactor.userId !== this.userInfo.userId) {
+            this.messageList.push(data)
 
-          console.log('messageList: ', this.messageList)
+            console.log('messageList: ', this.messageList)
+          }
 
           if (data.chatType === 2) {
             this.chatType = data.chatType
@@ -401,12 +427,6 @@ export default {
         candidate: this.message.candidate
       }
 
-      if (this.message.chatType === 0) {
-        this.messageList.push(this.message)
-      }
-
-      console.log('messageList: ', this.messageList, this.message.chatType)
-
       return new Promise((resolve, reject) => {
         sendSingleMessage(params).then(({ code }) => {
           if (code === 200) {
@@ -425,6 +445,10 @@ export default {
 .chat {
   width: 1200px;
   margin: 20px auto 0;
+  padding: 20px;
+  background-color: #272a37;
+  border-radius: 16px;
+  color: #fff;
   position: sticky;
   top: 80px;
   .side {

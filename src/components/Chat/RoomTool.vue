@@ -104,6 +104,8 @@ export default {
                     })
 
                     this.visible = false
+
+                    this.webRTC.closeTrack(this.localStream)
                 })
             })
         },
@@ -198,7 +200,7 @@ export default {
 .room-tool {
     box-sizing: border-box;
     width: 100%;
-    background-color: #fff;
+    background-color: #424656;
     padding: 10px 24px;
 
     .svg-icon {
@@ -206,6 +208,7 @@ export default {
         width: 24px;
         height: 24px;
         cursor: pointer;
+        color: #fff;
 
         &:first-child {
             margin-left: 0;

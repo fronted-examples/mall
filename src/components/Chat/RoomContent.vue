@@ -24,7 +24,9 @@ export default {
     width: 100%;
     height: 350px;
     overflow: auto;
-    border-left: 15px solid #fff;
-    border-right: 15px solid #fff;
+    background-color: #323644;
+    border-radius: 8px 8px 0 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
 }
 </style>

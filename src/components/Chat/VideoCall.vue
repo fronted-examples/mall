@@ -75,13 +75,12 @@ export default {
         height: 360px;
         display: block;
         object-fit: cover;
-        border: 1px solid #eee;
-        background-color: #f2f6fc;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-30%, -85%) scale(0.5, 0.25);
         z-index: 99999;
+        background-color: transparent;
     }
 
     .local-video {

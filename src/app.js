@@ -24,6 +24,10 @@ import '@personal-lib/vue-markdown-reader/lib/theme-chalk/index.css'
 
 import Directives from './directives'
 
+import FileMixin from '@/mixins/FileMixin'
+
+import plugins from '@/plugins' // plugins
+
 if (process.env.VUE_ENV === 'client') {
   require('reset-css')
 
@@ -38,6 +42,8 @@ Vue.use(VueMeta)
 Vue.use(ElementUI)
 Vue.use(MarkdownReader)
 Vue.use(Directives)
+Vue.mixin(FileMixin)
+Vue.use(plugins)
 
 // 需要返回一个应用程序工厂: 返回Vue实例和Router实例
 export function createApp (cookie) {

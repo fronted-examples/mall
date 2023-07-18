@@ -144,13 +144,15 @@ export default {
         .message-file {
             display: inline-block;
             box-sizing: border-box;
-            padding: 8px 10px;
+            padding: 8px 12px;
             min-width: 50px;
             min-height: 35px;
-            line-height: 19px;
+            line-height: 22px;
             background-color: #383c4b;
             border-radius: 5px;
-            font-size: 12px;
+            font-size: 15px;
+            color: #fff;
+            word-break: break-word;
             position: relative;
             &::after {
                 content: '';

@@ -1,6 +1,6 @@
 <template>
     <section class="room-tool">
-        <svg-icon icon-class="video" title="视频" @click.stop="onChange(0)" />
+        <svg-icon v-if="callable" icon-class="video" title="视频" @click.stop="onChange(0)" />
         <svg-icon icon-class="folder" title="文件" @click.stop="onChange(1)" />
         <svg-icon icon-class="image" title="图片" @click.stop="onChange(2)" />
 
@@ -19,6 +19,10 @@ if (process.env.VUE_ENV === 'client') {
 export default {
     name: 'RoomTool',
     props: {
+        callable: {
+            type: Boolean,
+            default: true
+        },
         onUploadFile: {
             type: Function,
             default: () => {},

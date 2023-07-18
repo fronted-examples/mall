@@ -8,23 +8,48 @@
             @input="onInput"
             @compositionstart="onStart"
             @compositionend="onEnd" />
-            
+
+        <el-popover
+            placement="top"
+            popper-class="picker-popover"
+            trigger="click">
+            <client-only>
+                <picker :include="['people']" :i18n="i18n" :showCategories="false" :showSearch="false" :showPreview="false" @select="selectEmoji" />
+            </client-only>
+            <svg-icon class="emoji" slot="reference" icon-class="emoji" title="表情" />
+        </el-popover>
         <el-button type="default" @click.stop="onSend">发送(S)</el-button>
     </section>
 </template>
 
 <script>
+import { Picker } from 'emoji-mart-vue'
+
 export default {
     name: 'RoomFooter',
+    components: {
+        Picker
+    },
     data () {
         return {
             message: '',
-            composing: false
+            composing: false,
+            i18n: {
+                notfound: '未找到表情',
+                categories: {
+                    recent: '最近使用',
+                    people: '表情与头像'
+                }
+            }
         }
     },
     methods: {
+        selectEmoji (emoji) {
+            this.message += emoji.native
+
+            this.$refs.textarea.innerHTML = this.message
+        },
         onInput ($event) {
-            // console.log('onInput: ', e)
             const text = $event.target.innerText
             this.valueHandle($event, text)
         },
@@ -133,7 +158,6 @@ export default {
             content: attr(placeholder);
         }
     }
-
     .el-button {
         width: 80px;
         border-radius: 5px;
@@ -153,5 +177,20 @@ export default {
             clear: both;
         }
     }
+
+    .emoji {
+        margin-top: 2.5px;
+        margin-left: 10px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        color: #f4ea2a;
+    }
+}
+</style>
+
+<style>
+.picker-popover {
+    padding: 0 !important;
 }
 </style>

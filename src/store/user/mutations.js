@@ -28,14 +28,6 @@ const mutations = {
   },
   [UPDATE_USER_INFO]: (state, data) => {
     state.userInfo = data
-
-    if (process.env.VUE_ENV === 'client') {
-      const sessionStorage = new Storage('sessionStorage')
-      sessionStorage.setItem({
-        name: 'userInfo',
-        value: data
-      })
-    }
   }
 }
 

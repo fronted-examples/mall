@@ -3,7 +3,6 @@ import Router from 'vue-router'
 
 // webpack中配置@指向src
 import Layout from '@/layout/index'
-import { async } from 'q'
 
 const Recommend = resolve => require(['@/views/recommend/index'], resolve)
 const Follow = resolve => require(['@/views/recommend/follow/index'], resolve)

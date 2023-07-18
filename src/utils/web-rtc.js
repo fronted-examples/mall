@@ -151,7 +151,9 @@ WebRTC.prototype.closeTracks = function (stream) {
 
     const tracks = stream.getTracks()
 
-      for (let i = 0; i < tracks.length; i++) {
+    console.log('tracks: ', tracks)
+
+    for (let i = 0; i < tracks.length; i++) {
         tracks[i].stop()
-      }
+    }
 }

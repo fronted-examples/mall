@@ -26,7 +26,7 @@ export default {
 .room-header {
     box-sizing: border-box;
     width: 100%;
-    height: 60px;
+    height: 40px;
     padding: 0 10px 0;
 
     .left, .middle, .right {
@@ -40,7 +40,7 @@ export default {
     .middle {
         width: 60%;
         text-align: center;
-        line-height: 60px;
+        // line-height: 40px;
         .title {
             font-size: 24px;
             font-weight: bold;

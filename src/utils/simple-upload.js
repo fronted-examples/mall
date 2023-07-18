@@ -145,20 +145,10 @@ Uploader.prototype.beforeUpload = async function () {
 
     let file = new File(params, this)
 
-    // params.chunks = createFileChunk(file)
-
-    // params.md5 = await getFileChunkMd5(params.chunks)
-
-    // const { uploadUrls, uploadId, fileUrl, id } = await getMultipartUpload(params)
-
     const { uploadUrls, uploadId, fileUrl, id } = await getMultipartUpload(file)
 
     file.uploadUrls = uploadUrls
     file.uploadId = uploadId
-    // params.status = Uploader.status[this.language].waiting
-    // params.uploaded = '0' + (this.language === 'EN' ? 'B' : '字节')
-    // params.speed = '0' + (this.language === 'EN' ? 'B/s' : '字节/秒')
-    // params.remainingTime = '0' + (this.language === 'EN' ? 's' : '秒')
 
     if (!uploadUrls) {
       file.id = id

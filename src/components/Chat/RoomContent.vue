@@ -22,7 +22,7 @@ export default {
 .room-content {
     box-sizing: border-box;
     width: 100%;
-    height: 350px;
+    height: 375px;
     overflow: auto;
     background-color: #323644;
     border-radius: 8px 8px 0 0;
